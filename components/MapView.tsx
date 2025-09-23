@@ -9,8 +9,9 @@ import { findNearest, findNearestAirbase, formatDistance } from '../utils/geo';
 import ReactDOMServer from 'react-dom/server';
 import { Plane, MapPin, School, Hospital, Flame } from 'lucide-react';
 
-const tileLayerUrl = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-const tileLayerAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+const tileLayerUrl = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
+const tileLayerAttribution =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>';
 
 const defaultPolygonStyle = {
   color: '#0891b2', weight: 2, opacity: 0.8, fillColor: '#22d3ee', fillOpacity: 0.4,
