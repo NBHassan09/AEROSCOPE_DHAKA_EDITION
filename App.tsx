@@ -131,7 +131,7 @@ const App: React.FC = () => {
   const [selectedSector, setSelectedSector] = useState<Feature | null>(null);
   const [sectorInfo, setSectorInfo] = useState<SectorInfo | null>(null);
   const [flyTo, setFlyTo] = useState<{ coordinates: [number, number], zoom: number } | null>(null);
-  const [page, setPage] = useState<'map' | 'analysis' | 'methodology' | 'about'>('map');
+  const [page, setPage] = useState<'map' | 'analysis' | 'methodology' | 'about'>('about');
   const [selectedAirbase, setSelectedAirbase] = useState<AirbaseLocation | null>(null);
 
   const handleSelectSector = useCallback((sector: Feature | null) => {
@@ -304,7 +304,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen w-screen bg-gray-900 text-gray-200">
+    <div className="flex h-screen w-screen bg-slate-900 text-slate-200">
       <Sidebar
         page={page}
         onSetPage={setPage}

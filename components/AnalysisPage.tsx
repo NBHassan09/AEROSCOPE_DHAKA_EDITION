@@ -65,8 +65,8 @@ const formatScientificJSX = (num: number) => {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray-700/80 backdrop-blur-sm border border-gray-600 p-3 rounded-lg text-sm">
-        <p className="font-bold text-gray-100 mb-2">{label}</p>
+      <div className="bg-slate-700/80 backdrop-blur-sm border border-slate-600 p-3 rounded-lg text-sm">
+        <p className="font-bold text-slate-100 mb-2">{label}</p>
         {payload.map((pld: any) => (
           <div key={pld.dataKey} style={{ color: pld.color }}>
             {pld.name}: {pld.dataKey.includes('no2') ? formatScientificJSX(pld.value) : pld.value.toFixed(2)}
@@ -143,11 +143,11 @@ const AnalysisPage: React.FC = () => {
   const maxHospitalValue = filteredHospitalData.length > 0 ? Math.max(...filteredHospitalData.map(d => d.value)) : 1;
 
   return (
-    <div className="p-8 h-full overflow-y-auto bg-gray-900 text-gray-200">
+    <div className="p-8 h-full overflow-y-auto bg-slate-900 text-slate-200">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center space-x-3 mb-6">
           <BarChart2 size={32} className="text-cyan-400"/>
-          <h1 className="text-3xl font-bold text-gray-100">Analysis Dashboard</h1>
+          <h1 className="text-3xl font-bold text-slate-100">Analysis Dashboard</h1>
         </div>
         
         <div className="bg-cyan-900/40 border border-cyan-700/60 p-4 rounded-lg mb-8 flex items-start space-x-3">
@@ -158,7 +158,7 @@ const AnalysisPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+            <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                 <h3 className="text-lg font-semibold mb-3 flex items-center">
                     <MousePointer size={20} className="mr-2 text-cyan-400" />
                     Select Airbases to Display
@@ -169,7 +169,7 @@ const AnalysisPage: React.FC = () => {
                             className={`flex items-center justify-center space-x-2 font-semibold py-2 px-3 rounded-md transition-colors border text-sm ${
                                 selectedAirbases.includes(name) 
                                     ? 'bg-cyan-600 text-white border-cyan-500' 
-                                    : 'bg-gray-700/50 hover:bg-gray-700 text-gray-300 border-gray-600'
+                                    : 'bg-slate-700/50 hover:bg-slate-700 text-slate-300 border-slate-600'
                             }`}
                         >
                             {selectedAirbases.includes(name) && <Check size={16} />}
@@ -178,7 +178,7 @@ const AnalysisPage: React.FC = () => {
                     ))}
                 </div>
             </div>
-             <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+             <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                 <h3 className="text-lg font-semibold mb-3 flex items-center">
                     <TrendingUp size={20} className="mr-2 text-cyan-400" />
                     Select Data Series
@@ -186,7 +186,7 @@ const AnalysisPage: React.FC = () => {
                 <div className="flex flex-wrap gap-3">
                     <button onClick={() => handleSeriesToggle('no2')}
                         className={`flex items-center justify-center space-x-2 font-semibold py-2 px-3 rounded-md transition-colors border text-sm ${
-                            visibleSeries.no2 ? 'bg-teal-600 text-white border-teal-500' : 'bg-gray-700/50 hover:bg-gray-700 text-gray-300 border-gray-600'
+                            visibleSeries.no2 ? 'bg-teal-600 text-white border-teal-500' : 'bg-slate-700/50 hover:bg-slate-700 text-slate-300 border-slate-600'
                         }`}
                     >
                         {visibleSeries.no2 && <Check size={16} />}
@@ -194,7 +194,7 @@ const AnalysisPage: React.FC = () => {
                     </button>
                      <button onClick={() => handleSeriesToggle('ntl')}
                         className={`flex items-center justify-center space-x-2 font-semibold py-2 px-3 rounded-md transition-colors border text-sm ${
-                            visibleSeries.ntl ? 'bg-amber-600 text-white border-amber-500' : 'bg-gray-700/50 hover:bg-gray-700 text-gray-300 border-gray-600'
+                            visibleSeries.ntl ? 'bg-amber-600 text-white border-amber-500' : 'bg-slate-700/50 hover:bg-slate-700 text-slate-300 border-slate-600'
                         }`}
                     >
                         {visibleSeries.ntl && <Check size={16} />}
@@ -204,12 +204,12 @@ const AnalysisPage: React.FC = () => {
             </div>
         </div>
 
-        <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 shadow-xl h-[500px] mb-8">
+        <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700 shadow-xl h-[500px] mb-8">
             <h2 className="text-xl font-semibold text-center mb-4">NO₂ & Nighttime Lights (NTL) Trends (2019-2024)</h2>
             <ResponsiveContainer width="100%" height="90%">
                 <LineChart data={chartData} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#4a5568" />
-                    <XAxis dataKey="date" stroke="#a0aec0" tick={{ fontSize: 12 }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                    <XAxis dataKey="date" stroke="#94a3b8" tick={{ fontSize: 12 }} />
                     {visibleSeries.no2 && <YAxis yAxisId="left" stroke="#81e6d9" label={{ value: 'NO₂ (mol/m²)', angle: -90, position: 'insideLeft', fill: '#81e6d9', style:{textAnchor: 'middle'} }} tick={{ fontSize: 12 }} tickFormatter={formatScientificString} />}
                     {visibleSeries.ntl && <YAxis yAxisId="right" orientation="right" stroke="#f6e05e" label={{ value: 'VIIRS NTL', angle: 90, position: 'insideRight', fill: '#f6e05e', style:{textAnchor: 'middle'} }} tick={{ fontSize: 12 }}/>}
                     <Tooltip content={<CustomTooltip />} />
@@ -221,47 +221,47 @@ const AnalysisPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8 mb-8">
-            <div className="lg:col-span-2 bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+            <div className="lg:col-span-2 bg-slate-800/50 p-6 rounded-lg border border-slate-700">
                 <h3 className="text-2xl font-semibold flex items-center mb-4"><Lightbulb size={24} className="mr-3 text-yellow-400" />Summary Statistics</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    {airbaseNames.map(name => (
-                        <div key={name} className="bg-gray-900/40 p-4 rounded-lg border border-gray-700/50">
+                        <div key={name} className="bg-slate-900/40 p-4 rounded-lg border border-slate-700/50">
                             <h4 className="font-bold text-lg text-cyan-300 mb-3">{name}</h4>
                             <div className="space-y-3 text-sm">
-                                <div className="flex justify-between items-center"><span className="text-gray-400 flex items-center"><Thermometer size={14} className="mr-1.5" /> Latest NO₂:</span><span className="font-mono text-teal-300">{summaryStats[name]?.latest ? formatScientificJSX(summaryStats[name].latest.no2) : 'N/A'}</span></div>
-                                <div className="flex justify-between items-center"><span className="text-gray-400 flex items-center"><TrendingUp size={14} className="mr-1.5" /> Peak NO₂:</span><span className="font-mono text-red-400">{summaryStats[name]?.peak ? formatScientificJSX(summaryStats[name].peak.no2) : 'N/A'}<span className="text-gray-500 ml-1">({summaryStats[name]?.peak?.date})</span></span></div>
+                                <div className="flex justify-between items-center"><span className="text-slate-400 flex items-center"><Thermometer size={14} className="mr-1.5" /> Latest NO₂:</span><span className="font-mono text-teal-300">{summaryStats[name]?.latest ? formatScientificJSX(summaryStats[name].latest.no2) : 'N/A'}</span></div>
+                                <div className="flex justify-between items-center"><span className="text-slate-400 flex items-center"><TrendingUp size={14} className="mr-1.5" /> Peak NO₂:</span><span className="font-mono text-red-400">{summaryStats[name]?.peak ? formatScientificJSX(summaryStats[name].peak.no2) : 'N/A'}<span className="text-slate-500 ml-1">({summaryStats[name]?.peak?.date})</span></span></div>
                             </div>
                         </div>
                    ))}
                 </div>
             </div>
-             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+             <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
                 <h3 className="text-2xl font-semibold flex items-center mb-4 text-red-400"><AlertTriangle size={24} className="mr-3" />High NO₂ Alerts</h3>
-                <p className="text-xs text-gray-500 mb-3">Months in the top 20th percentile for air pollution.</p>
+                <p className="text-xs text-slate-500 mb-3">Months in the top 20th percentile for air pollution.</p>
                 <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-                   {alerts.map(({name, point}, index) => (<div key={index} className="flex justify-between items-center bg-red-900/20 p-2 rounded-md text-sm"><div><span className="font-semibold text-gray-300">{name}</span><span className="text-gray-400 ml-2">({point.date})</span></div><span className="font-mono text-red-300">{formatScientificJSX(point.no2)}</span></div>))}
+                   {alerts.map(({name, point}, index) => (<div key={index} className="flex justify-between items-center bg-red-900/20 p-2 rounded-md text-sm"><div><span className="font-semibold text-slate-300">{name}</span><span className="text-slate-400 ml-2">({point.date})</span></div><span className="font-mono text-red-300">{formatScientificJSX(point.no2)}</span></div>))}
                 </div>
             </div>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 shadow-xl min-h-[400px]">
+            <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700 shadow-xl min-h-[400px]">
                 <h2 className="text-xl font-semibold text-center mb-6">Schools within 7 km Radius</h2>
-                 {filteredSchoolData.length > 0 ? (<div className="w-full flex justify-around items-end" style={{ height: '300px' }}>{filteredSchoolData.map(item => (<div key={item.name} className="flex flex-col items-center h-full justify-end text-center group"><p className="font-bold text-lg mb-1 text-gray-100">{item.value}</p><div className={`w-20 ${item.color} rounded-t-md group-hover:opacity-90 transition-all duration-700 ease-out`} style={{ height: isAnimated ? `${(item.value / maxSchoolValue) * 85}%` : '0%' }} title={`${item.name}: ${item.value} schools`}></div><p className="mt-2 text-sm text-gray-400 font-medium">{item.shortName}</p></div>))}</div>) : (<div className="flex items-center justify-center h-[300px] text-gray-500"><p>Select an airbase to view school data.</p></div>)}<div className="w-full border-t border-gray-600 mt-2"></div>
+                 {filteredSchoolData.length > 0 ? (<div className="w-full flex justify-around items-end" style={{ height: '300px' }}>{filteredSchoolData.map(item => (<div key={item.name} className="flex flex-col items-center h-full justify-end text-center group"><p className="font-bold text-lg mb-1 text-slate-100">{item.value}</p><div className={`w-20 ${item.color} rounded-t-md group-hover:opacity-90 transition-all duration-700 ease-out`} style={{ height: isAnimated ? `${(item.value / maxSchoolValue) * 85}%` : '0%' }} title={`${item.name}: ${item.value} schools`}></div><p className="mt-2 text-sm text-slate-400 font-medium">{item.shortName}</p></div>))}</div>) : (<div className="flex items-center justify-center h-[300px] text-slate-500"><p>Select an airbase to view school data.</p></div>)}<div className="w-full border-t border-slate-600 mt-2"></div>
             </div>
-            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 shadow-xl min-h-[400px]">
+            <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700 shadow-xl min-h-[400px]">
                 <h2 className="text-xl font-semibold text-center mb-6">Hospitals within 7 km Radius</h2>
-                 {filteredHospitalData.length > 0 ? (<div className="w-full flex justify-around items-end" style={{ height: '300px' }}>{filteredHospitalData.map(item => (<div key={item.name} className="flex flex-col items-center h-full justify-end text-center group"><p className="font-bold text-lg mb-1 text-gray-100">{item.value}</p><div className={`w-20 ${item.color} rounded-t-md group-hover:opacity-90 transition-all duration-700 ease-out`} style={{ height: isAnimated ? `${(item.value / maxHospitalValue) * 85}%` : '0%' }} title={`${item.name}: ${item.value} hospitals`}></div><p className="mt-2 text-sm text-gray-400 font-medium">{item.shortName}</p></div>))}</div>) : (<div className="flex items-center justify-center h-[300px] text-gray-500"><p>Select an airbase to view hospital data.</p></div>)}<div className="w-full border-t border-gray-600 mt-2"></div>
+                 {filteredHospitalData.length > 0 ? (<div className="w-full flex justify-around items-end" style={{ height: '300px' }}>{filteredHospitalData.map(item => (<div key={item.name} className="flex flex-col items-center h-full justify-end text-center group"><p className="font-bold text-lg mb-1 text-slate-100">{item.value}</p><div className={`w-20 ${item.color} rounded-t-md group-hover:opacity-90 transition-all duration-700 ease-out`} style={{ height: isAnimated ? `${(item.value / maxHospitalValue) * 85}%` : '0%' }} title={`${item.name}: ${item.value} hospitals`}></div><p className="mt-2 text-sm text-slate-400 font-medium">{item.shortName}</p></div>))}</div>) : (<div className="flex items-center justify-center h-[300px] text-slate-500"><p>Select an airbase to view hospital data.</p></div>)}<div className="w-full border-t border-slate-600 mt-2"></div>
             </div>
         </div>
 
         <div className="mt-10">
             <h3 className="text-2xl font-semibold flex items-center mb-4"><Lightbulb size={24} className="mr-3 text-yellow-400" />Key Insights</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-800/50 p-5 rounded-lg border border-gray-700"><div className="flex items-center mb-3"><School size={22} className="mr-3 text-blue-400" /><h4 className="font-bold text-lg">Educational Infrastructure</h4></div><p className="text-gray-400 text-sm">The data reveals a significant disparity in school density. <strong className="text-gray-200">Mirpur Cantonment (558 schools)</strong> is a major educational hub, suggesting a mature residential area. In contrast, <strong className="text-gray-200">Tejgaon Air Base (290 schools)</strong> has a much lower density, consistent with its primarily industrial and operational focus.</p></div>
-                <div className="bg-gray-800/50 p-5 rounded-lg border border-gray-700"><div className="flex items-center mb-3"><HeartPulse size={22} className="mr-3 text-pink-500" /><h4 className="font-bold text-lg">Healthcare Accessibility</h4></div><p className="text-gray-400 text-sm">Healthcare facilities are most concentrated around <strong className="text-gray-200">Tejgaon Air Base (330 hospitals)</strong>, which serves a dense, mixed-use urban area. <strong className="text-gray-200">Mirpur Cantonment (185)</strong> also has substantial medical infrastructure, supporting its large residential community. <strong className="text-gray-200">HSIA (95)</strong> has the fewest, likely due to its focus as an international transit hub with less surrounding residential density.</p></div>
-                <div className="bg-gray-800/50 p-5 rounded-lg border border-gray-700"><div className="flex items-center mb-3"><Wind size={22} className="mr-3 text-teal-400" /><h4 className="font-bold text-lg">Environmental & Traffic</h4></div><p className="text-gray-400 text-sm">Environmental data provides deeper context. <strong className="text-gray-200">Tejgaon Air Base</strong> shows consistently higher Nighttime Light (NTL) intensity—a proxy for traffic and economic activity—aligning with its industrial role. All zones exhibit seasonal peaks in NO₂ (a key traffic pollutant) during winter, indicating periods of higher congestion and reduced air quality.</p></div>
-                <div className="bg-gray-800/50 p-5 rounded-lg border border-gray-700"><div className="flex items-center mb-3"><Combine size={22} className="mr-3 text-green-500" /><h4 className="font-bold text-lg">Strategic Overview</h4></div><p className="text-gray-400 text-sm">Analysis suggests <strong className="text-gray-200">Mirpur Cantonment</strong> serves as a primary residential and family support base. The lower density of civilian infrastructure near <strong className="text-gray-200">Tejgaon Air Base</strong> and <strong className="text-gray-200">HSIA</strong> is logical, prioritizing operational security and clear zones around key aviation assets, which indicates deliberate urban planning.</p></div>
+                <div className="bg-slate-800/50 p-5 rounded-lg border border-slate-700"><div className="flex items-center mb-3"><School size={22} className="mr-3 text-blue-400" /><h4 className="font-bold text-lg">Educational Infrastructure</h4></div><p className="text-slate-400 text-sm">The data reveals a significant disparity in school density. <strong className="text-slate-200">Mirpur Cantonment (558 schools)</strong> is a major educational hub, suggesting a mature residential area. In contrast, <strong className="text-slate-200">Tejgaon Air Base (290 schools)</strong> has a much lower density, consistent with its primarily industrial and operational focus.</p></div>
+                <div className="bg-slate-800/50 p-5 rounded-lg border border-slate-700"><div className="flex items-center mb-3"><HeartPulse size={22} className="mr-3 text-pink-500" /><h4 className="font-bold text-lg">Healthcare Accessibility</h4></div><p className="text-slate-400 text-sm">Healthcare facilities are most concentrated around <strong className="text-slate-200">Tejgaon Air Base (330 hospitals)</strong>, which serves a dense, mixed-use urban area. <strong className="text-slate-200">Mirpur Cantonment (185)</strong> also has substantial medical infrastructure, supporting its large residential community. <strong className="text-slate-200">HSIA (95)</strong> has the fewest, likely due to its focus as an international transit hub with less surrounding residential density.</p></div>
+                <div className="bg-slate-800/50 p-5 rounded-lg border border-slate-700"><div className="flex items-center mb-3"><Wind size={22} className="mr-3 text-teal-400" /><h4 className="font-bold text-lg">Environmental & Traffic</h4></div><p className="text-slate-400 text-sm">Environmental data provides deeper context. <strong className="text-slate-200">Tejgaon Air Base</strong> shows consistently higher Nighttime Light (NTL) intensity—a proxy for traffic and economic activity—aligning with its industrial role. All zones exhibit seasonal peaks in NO₂ (a key traffic pollutant) during winter, indicating periods of higher congestion and reduced air quality.</p></div>
+                <div className="bg-slate-800/50 p-5 rounded-lg border border-slate-700"><div className="flex items-center mb-3"><Combine size={22} className="mr-3 text-green-500" /><h4 className="font-bold text-lg">Strategic Overview</h4></div><p className="text-slate-400 text-sm">Analysis suggests <strong className="text-slate-200">Mirpur Cantonment</strong> serves as a primary residential and family support base. The lower density of civilian infrastructure near <strong className="text-slate-200">Tejgaon Air Base</strong> and <strong className="text-slate-200">HSIA</strong> is logical, prioritizing operational security and clear zones around key aviation assets, which indicates deliberate urban planning.</p></div>
             </div>
         </div>
       </div>

@@ -30,13 +30,13 @@ const AiChat: React.FC<AiChatProps> = ({ history, isLoading, onQuery, onClose })
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-800 border-t border-gray-700">
-      <div className="p-4 border-b border-gray-700 flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-300 flex items-center">
+    <div className="flex flex-col h-full bg-slate-800 border-t border-slate-700">
+      <div className="p-4 border-b border-slate-700 flex justify-between items-center">
+        <h2 className="text-lg font-semibold text-slate-300 flex items-center">
             <Bot className="mr-2 text-cyan-400" size={20} />
             Planning AI Chat
         </h2>
-        <button onClick={onClose} className="p-1 text-gray-400 hover:text-white hover:bg-gray-600 rounded-full transition-colors">
+        <button onClick={onClose} className="p-1 text-slate-400 hover:text-white hover:bg-slate-600 rounded-full transition-colors">
             <X size={20} />
         </button>
       </div>
@@ -52,14 +52,14 @@ const AiChat: React.FC<AiChatProps> = ({ history, isLoading, onQuery, onClose })
               className={`max-w-xs md:max-w-sm rounded-lg px-4 py-2 ${
                 msg.sender === 'user'
                   ? 'bg-blue-600 text-white rounded-br-none'
-                  : 'bg-gray-700 text-gray-200 rounded-bl-none'
+                  : 'bg-slate-700 text-slate-200 rounded-bl-none'
               }`}
             >
               <p className="text-sm">{msg.content}</p>
             </div>
              {msg.sender === 'user' && (
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
-                    <User size={18} className="text-gray-300" />
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center">
+                    <User size={18} className="text-slate-300" />
                 </div>
             )}
           </div>
@@ -69,8 +69,8 @@ const AiChat: React.FC<AiChatProps> = ({ history, isLoading, onQuery, onClose })
              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center">
                 <Bot size={18} className="text-cyan-400" />
             </div>
-            <div className="bg-gray-700 rounded-lg px-4 py-2 rounded-bl-none">
-              <div className="flex items-center space-x-2 text-sm text-gray-400">
+            <div className="bg-slate-700 rounded-lg px-4 py-2 rounded-bl-none">
+              <div className="flex items-center space-x-2 text-sm text-slate-400">
                 <Loader className="animate-spin" size={16} />
                 <span>Thinking...</span>
               </div>
@@ -79,20 +79,20 @@ const AiChat: React.FC<AiChatProps> = ({ history, isLoading, onQuery, onClose })
         )}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="p-4 border-t border-gray-700">
+      <form onSubmit={handleSubmit} className="p-4 border-t border-slate-700">
         <div className="relative">
           <input
             type="text"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="e.g., Show capitals of Europe"
-            className="w-full bg-gray-700 text-gray-200 border border-gray-600 rounded-full py-2 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+            className="w-full bg-slate-700 text-slate-200 border border-slate-600 rounded-full py-2 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={isLoading || !prompt.trim()}
-            className="absolute right-1 top-1/2 -translate-y-1/2 p-2 bg-cyan-600 text-white rounded-full hover:bg-cyan-500 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
+            className="absolute right-1 top-1/2 -translate-y-1/2 p-2 bg-cyan-600 text-white rounded-full hover:bg-cyan-500 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors"
           >
             <Send size={18} />
           </button>

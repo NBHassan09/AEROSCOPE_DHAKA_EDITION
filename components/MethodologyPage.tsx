@@ -3,19 +3,19 @@ import { Database, BrainCircuit, BarChart3, TestTube2, Layers } from 'lucide-rea
 
 const MethodologyPage: React.FC = () => {
   return (
-    <div className="p-8 h-full overflow-y-auto bg-gray-900 text-gray-200">
+    <div className="p-8 h-full overflow-y-auto bg-slate-900 text-slate-200">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center space-x-3 mb-8">
           <TestTube2 size={32} className="text-cyan-400"/>
-          <h1 className="text-3xl font-bold text-gray-100">Methodology</h1>
+          <h1 className="text-3xl font-bold text-slate-100">Methodology</h1>
         </div>
 
         <div className="space-y-8">
           {/* Data Sources Section */}
-          <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+          <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
             <h2 className="text-2xl font-semibold mb-4 flex items-center"><Database size={24} className="mr-3 text-cyan-400"/>Data Sources</h2>
-            <p className="text-gray-400 mb-4">To evaluate the urban environment and safety conditions around the three key airbases, we collected and processed satellite-derived and geospatial datasets for the period 2019–2024.</p>
-            <ul className="list-disc list-inside space-y-4 text-gray-300">
+            <p className="text-slate-400 mb-4">To evaluate the urban environment and safety conditions around the three key airbases, we collected and processed satellite-derived and geospatial datasets for the period 2019–2024.</p>
+            <ul className="list-disc list-inside space-y-4 text-slate-300">
               <li>
                 <strong className="text-white">Nitrogen Dioxide (NO₂) Concentrations:</strong> Sourced from the <strong className="text-white">NASA Sentinel-5P dataset (COPERNICUS/S5P/NRTI/L3_NO2)</strong>. Data was obtained via the Google Earth Engine (GEE) Python API, providing daily tropospheric NO₂ column densities at an approximate <strong className="text-white">7 km spatial resolution</strong>. This serves as a primary indicator for air quality and pollution from traffic and industrial sources.
               </li>
@@ -29,9 +29,9 @@ const MethodologyPage: React.FC = () => {
           </div>
 
           {/* AI & Geoprocessing Section */}
-          <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+          <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
             <h2 className="text-2xl font-semibold mb-4 flex items-center"><BrainCircuit size={24} className="mr-3 text-cyan-400"/>AI & Geoprocessing</h2>
-            <ul className="list-disc list-inside space-y-3 text-gray-300">
+            <ul className="list-disc list-inside space-y-3 text-slate-300">
               <li>
                 <strong className="text-white">Natural Language to GeoJSON:</strong> The application leverages Google's Gemini API to interpret user queries. A detailed system instruction primes the model to act as an expert urban planner for Dhaka.
               </li>
@@ -45,10 +45,10 @@ const MethodologyPage: React.FC = () => {
           </div>
 
           {/* Analysis Techniques Section */}
-          <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+          <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
             <h2 className="text-2xl font-semibold mb-4 flex items-center"><BarChart3 size={24} className="mr-3 text-cyan-400"/>Analysis Techniques</h2>
-            <p className="text-gray-400 mb-4">Our analysis adheres to international urban planning standards to ensure that the insights are relevant, accurate, and actionable for assessing safety and infrastructure exposure.</p>
-            <ul className="list-disc list-inside space-y-4 text-gray-300">
+            <p className="text-slate-400 mb-4">Our analysis adheres to international urban planning standards to ensure that the insights are relevant, accurate, and actionable for assessing safety and infrastructure exposure.</p>
+            <ul className="list-disc list-inside space-y-4 text-slate-300">
               <li>
                 <strong className="text-white">Zone of Influence Definition:</strong> In line with international aviation planning policies, circular buffers with a <strong className="text-white">7 km radius</strong> were created around each airbase. This defines the primary "airport influence area," where the impacts of noise, emissions, and operational activities are most significant. Only observations within these buffers were retained for analysis.
               </li>
@@ -65,9 +65,9 @@ const MethodologyPage: React.FC = () => {
           </div>
           
           {/* Tech Stack */}
-          <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+          <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
             <h2 className="text-2xl font-semibold mb-4 flex items-center"><Layers size={24} className="mr-3 text-cyan-400"/>Technology Stack</h2>
-            <ul className="list-disc list-inside space-y-3 text-gray-300">
+            <ul className="list-disc list-inside space-y-3 text-slate-300">
               <li>
                 <strong className="text-white">Frontend:</strong> Built with React and TypeScript for a robust, scalable user interface.
               </li>
