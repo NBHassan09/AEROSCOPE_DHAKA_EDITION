@@ -187,6 +187,16 @@ const App: React.FC = () => {
   const handleClearAirbaseSelection = useCallback(() => {
     setSelectedAirbase(null);
     handleSelectSector(null);
+    setLayers(prevLayers =>
+      prevLayers.map(layer => {
+        if (layer.id === 'airbases-dhaka') {
+          // Keep the base airbase layer visible
+          return { ...layer, isVisible: true };
+        }
+        // Hide all other layers
+        return { ...layer, isVisible: false };
+      })
+    );
   }, [handleSelectSector]);
 
   const handleAiQuery = useCallback(async (prompt: string) => {

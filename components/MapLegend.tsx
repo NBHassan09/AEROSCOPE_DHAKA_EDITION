@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronUp, ChevronDown, Plane, School, Hospital, Flame, MapPin } from 'lucide-react';
 
 const MapLegend: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="absolute bottom-4 right-4 z-[1000] bg-gray-800/80 backdrop-blur-md border border-gray-700 rounded-lg shadow-2xl text-gray-200 w-64">
