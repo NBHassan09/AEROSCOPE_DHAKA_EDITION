@@ -8,8 +8,9 @@ import L from 'leaflet';
 import { findNearest, findNearestAirbase, formatDistance } from '../utils/geo';
 import ReactDOMServer from 'react-dom/server';
 import { Plane, MapPin, School, Hospital, Flame } from 'lucide-react';
+import MapLegend from './MapLegend';
 
-const tileLayerUrl = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+const tileLayerUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 const tileLayerAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
 const defaultPolygonStyle = {
@@ -274,6 +275,7 @@ const MapView: React.FC<MapViewProps> = ({ layers, airbases, selectedSector, sel
             <Popup>7km radius around {selectedAirbase.name}</Popup>
          </Circle>
        )}
+       <MapLegend />
     </MapContainer>
   );
 };

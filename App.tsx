@@ -184,6 +184,11 @@ const App: React.FC = () => {
     }
   }, [handleFlyTo]);
 
+  const handleClearAirbaseSelection = useCallback(() => {
+    setSelectedAirbase(null);
+    handleSelectSector(null);
+  }, [handleSelectSector]);
+
   const handleAiQuery = useCallback(async (prompt: string) => {
     setIsLoading(true);
     handleSelectSector(null); // Close inspector on new query
@@ -299,6 +304,7 @@ const App: React.FC = () => {
         onRemoveLayer={removeLayer}
         onFlyTo={handleFlyTo}
         selectedAirbase={selectedAirbase}
+        onClearAirbaseSelection={handleClearAirbaseSelection}
       />
       <main className="flex-1 h-full relative">
         {renderPage()}

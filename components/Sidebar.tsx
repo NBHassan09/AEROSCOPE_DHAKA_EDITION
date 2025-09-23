@@ -19,6 +19,7 @@ interface SidebarProps {
   onRemoveLayer: (layerId:string) => void;
   onFlyTo: (location: AirbaseLocation) => void;
   selectedAirbase: AirbaseLocation | null;
+  onClearAirbaseSelection: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -33,6 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onRemoveLayer,
   onFlyTo,
   selectedAirbase,
+  onClearAirbaseSelection,
 }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -86,7 +88,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <li>Use the AI Chat to add new data layers to the map.</li>
                 </ul>
             </div>
-            <AirbaseList airbases={airbases} onFlyTo={onFlyTo} selectedAirbase={selectedAirbase} />
+            <AirbaseList 
+              airbases={airbases} 
+              onFlyTo={onFlyTo} 
+              selectedAirbase={selectedAirbase} 
+              onClearSelection={onClearAirbaseSelection}
+            />
             <LayerList layers={layers.filter(l => !l.id.includes('airbase'))} onToggle={onToggleLayer} onRemove={onRemoveLayer} />
           </>
         )}
