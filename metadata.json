@@ -1,0 +1,5 @@
+{
+  "name": "GeoAI Analyst",
+  "description": "An AI-powered GIS application that allows users to interact with a map using natural language queries. Generate, filter, and visualize geographic data seamlessly through an intuitive chat interface.",
+  "requestFramePermissions": []
+}
