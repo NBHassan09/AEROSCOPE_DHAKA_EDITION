@@ -7,6 +7,7 @@ import MapView from './components/MapView';
 import SectorInspector from './components/SectorInspector';
 import AnalysisPage from './components/AnalysisPage';
 import MethodologyPage from './components/MethodologyPage';
+import AboutPage from './components/AboutPage';
 import type { MapLayer, AiResponseMessage, SectorInfo, AirbaseLocation } from './types';
 import { generateGeoData } from './services/geminiService';
 import { findNearest, generateRandomPointInRadius } from './utils/geo';
@@ -130,7 +131,7 @@ const App: React.FC = () => {
   const [selectedSector, setSelectedSector] = useState<Feature | null>(null);
   const [sectorInfo, setSectorInfo] = useState<SectorInfo | null>(null);
   const [flyTo, setFlyTo] = useState<{ coordinates: [number, number], zoom: number } | null>(null);
-  const [page, setPage] = useState<'map' | 'analysis' | 'methodology'>('map');
+  const [page, setPage] = useState<'map' | 'analysis' | 'methodology' | 'about'>('map');
   const [selectedAirbase, setSelectedAirbase] = useState<AirbaseLocation | null>(null);
 
   const handleSelectSector = useCallback((sector: Feature | null) => {
@@ -295,6 +296,8 @@ const App: React.FC = () => {
         return <AnalysisPage />;
       case 'methodology':
         return <MethodologyPage />;
+      case 'about':
+        return <AboutPage />;
       default:
         return null;
     }

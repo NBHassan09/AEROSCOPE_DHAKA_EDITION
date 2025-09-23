@@ -8,8 +8,8 @@ import AirbaseList from './AirbaseList';
 import { Bot, MessageSquarePlus, Lightbulb } from 'lucide-react';
 
 interface SidebarProps {
-  page: 'map' | 'analysis' | 'methodology';
-  onSetPage: (page: 'map' | 'analysis' | 'methodology') => void;
+  page: 'map' | 'analysis' | 'methodology' | 'about';
+  onSetPage: (page: 'map' | 'analysis' | 'methodology' | 'about') => void;
   airbases: AirbaseLocation[];
   layers: MapLayer[];
   chatHistory: AiResponseMessage[];
@@ -66,8 +66,15 @@ const Sidebar: React.FC<SidebarProps> = ({
             </button>
             <button
                 onClick={() => onSetPage('methodology')}
-                title="About"
+                title="Methodology"
                 className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'methodology' ? 'bg-cyan-600 text-white' : 'bg-gray-700/50 hover:bg-gray-700'}`}
+            >
+                Methodology
+            </button>
+            <button
+                onClick={() => onSetPage('about')}
+                title="About"
+                className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'about' ? 'bg-cyan-600 text-white' : 'bg-gray-700/50 hover:bg-gray-700'}`}
             >
                 About
             </button>
