@@ -15,12 +15,10 @@ export interface OverlayTileLayer {
   tileUrl: string | null;
 }
 
-export type AiAction = 'ADD_LAYER' | 'INFO' | 'ERROR';
+export type AiAction = 'INFO' | 'ERROR';
 
 export interface AiResponse {
   action: AiAction;
-  layerName?: string;
-  geojsonData?: FeatureCollection;
   message?: string;
 }
 

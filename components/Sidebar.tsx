@@ -1,5 +1,6 @@
 
 
+
 import React, { useState } from 'react';
 import type { MapLayer, AiResponseMessage, AirbaseLocation, OverlayTileLayer } from '../types';
 import AiChat from './AiChat';
@@ -132,7 +133,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <ul className="text-sm text-gray-600 list-disc list-inside space-y-1">
                     <li>Click an airbase on the map or list to focus.</li>
                     <li>Click a school or hospital to see its distance from the nearest airbase.</li>
-                    <li>Use the AI Chat to add new data layers to the map.</li>
+                    <li>Use the AI Chat for analysis and suggestions.</li>
                 </ul>
             </div>
             <AirbaseList 

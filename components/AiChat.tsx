@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { AiResponseMessage } from '../types';
-import { Send, Bot, User, Loader, X } from 'lucide-react';
+import { Send, Bot, User, Loader, X, Wand2 } from 'lucide-react';
 
 interface AiChatProps {
   history: AiResponseMessage[];
@@ -28,6 +28,19 @@ const AiChat: React.FC<AiChatProps> = ({ history, isLoading, onQuery, onClose })
       setPrompt('');
     }
   };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    if (!isLoading) {
+      onQuery(suggestion);
+      setPrompt('');
+    }
+  };
+
+  const suggestions = [
+      "Summarize the area",
+      "Suggest a location for a new hospital",
+      "What are the planning challenges here?",
+  ];
 
   return (
     <div className="flex flex-col h-full bg-white border-t border-gray-200">
@@ -79,13 +92,31 @@ const AiChat: React.FC<AiChatProps> = ({ history, isLoading, onQuery, onClose })
         )}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200">
-        <div className="relative">
+      <div className="p-4 border-t border-gray-200">
+        <div className="mb-3">
+            <div className="flex items-center space-x-2 mb-2">
+                <Wand2 size={16} className="text-gray-500" />
+                <h3 className="text-sm font-semibold text-gray-600">Suggestions</h3>
+            </div>
+            <div className="flex flex-wrap gap-2">
+            {suggestions.map((s) => (
+                <button
+                key={s}
+                onClick={() => handleSuggestionClick(s)}
+                disabled={isLoading}
+                className="px-3 py-1 text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-full hover:bg-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                {s}
+                </button>
+            ))}
+            </div>
+        </div>
+        <form onSubmit={handleSubmit} className="relative">
           <input
             type="text"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="e.g., Show capitals of Europe"
+            placeholder="e.g., Suggest a good spot for a new park"
             className="w-full bg-gray-50 text-gray-800 border border-gray-300 rounded-full py-2 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
             disabled={isLoading}
           />
@@ -96,8 +127,8 @@ const AiChat: React.FC<AiChatProps> = ({ history, isLoading, onQuery, onClose })
           >
             <Send size={18} />
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

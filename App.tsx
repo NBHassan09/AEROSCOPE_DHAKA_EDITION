@@ -232,8 +232,6 @@ const App: React.FC = () => {
 
   const handleAiQuery = useCallback(async (prompt: string) => {
     setIsLoading(true);
-    handleSelectSector(null); // Close inspector on new query
-    setSelectedAirbase(null); // Hide circle on new query
 
     const userMessage: AiResponseMessage = {
       id: uuidvv4(),
@@ -243,36 +241,30 @@ const App: React.FC = () => {
     setChatHistory(prev => [...prev, userMessage]);
 
     try {
-      // The expert instruction has been moved to the system instruction in geminiService.ts for better performance and clarity.
-      const result = await generateGeoData(prompt);
+      // Capture context BEFORE clearing state
+      const visibleLayerNames = layers.filter(l => l.isVisible).map(l => l.name);
+      let context = '';
+      if (visibleLayerNames.length > 0) {
+        context += `Context: The following data layers are currently visible on the map: ${visibleLayerNames.join(', ')}.`;
+      } else {
+        context += 'Context: No data layers are currently visible on the map.';
+      }
+
+      if (selectedAirbase) {
+        context += ` The user is focused on the area around ${selectedAirbase.name}.`;
+      }
+
+      const fullPrompt = `${context}\n\nUser query: "${prompt}"`;
+      
+      const result = await generateGeoData(fullPrompt);
       const botMessage: AiResponseMessage = {
         id: uuidvv4(),
         sender: 'bot',
-        content: result.message || 'Here is the data you requested.',
+        content: result.message || 'Here is the information you requested.',
         action: result.action,
       };
       setChatHistory(prev => [...prev, botMessage]);
 
-      if (result.action === 'ADD_LAYER') {
-        if (result.geojsonData && Array.isArray(result.geojsonData.features)) {
-          const newLayer: MapLayer = {
-            id: uuidvv4(),
-            name: result.layerName || 'New Layer',
-            data: result.geojsonData,
-            isVisible: true,
-          };
-          setLayers(prev => [...prev, newLayer]);
-        } else {
-          console.error("AI returned ADD_LAYER action but geojsonData was invalid.", result);
-          const errorMessage: AiResponseMessage = {
-            id: uuidvv4(),
-            sender: 'bot',
-            content: "I tried to generate map data, but it came back in a format I couldn't read. Please try rephrasing your request.",
-            action: 'ERROR',
-          };
-          setChatHistory(prev => [...prev, errorMessage]);
-        }
-      }
     } catch (error) {
       console.error("Error querying GeoAI:", error);
       const errorMessage: AiResponseMessage = {
@@ -285,7 +277,7 @@ const App: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [handleSelectSector]);
+  }, [layers, selectedAirbase]);
 
   const toggleLayerVisibility = useCallback((layerId: string) => {
     setLayers(layers =>
