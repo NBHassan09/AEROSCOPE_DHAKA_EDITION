@@ -1,5 +1,5 @@
 {
-  "name": "GeoAI Analyst",
-  "description": "An AI-powered GIS application that allows users to interact with a map using natural language queries. Generate, filter, and visualize geographic data seamlessly through an intuitive chat interface.",
+  "name": "AeroScope- Dhaka Edition",
+  "description": "An AI-powered GIS application for analyzing the urban environment around key airbases in Dhaka. Users can interact with the map using natural language queries to visualize and understand geographic data.",
   "requestFramePermissions": []
 }

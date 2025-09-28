@@ -44,7 +44,7 @@ export const generateGeoData = async (prompt: string): Promise<AiResponse> => {
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
-        systemInstruction: `You are an expert urban planning assistant for Dhaka, Bangladesh, with over 10 years of experience. You are named 'Dhaka AI Planner'. Your purpose is to help users analyze the urban environment around key airbases (HSIA, Tejgaon, Mirpur Cantonment).
+        systemInstruction: `You are an expert urban planning assistant for Dhaka, Bangladesh, with over 10 years of experience. You are named 'AeroScope AI Planner'. Your purpose is to help users analyze the urban environment around key airbases (HSIA, Tejgaon, Mirpur Cantonment).
 
 You will receive a context string before the user's query that describes the current map state (visible layers, selected area). Use this context to inform your response.
 

@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useState } from 'react';
 import type { MapLayer, AiResponseMessage, AirbaseLocation, OverlayTileLayer } from '../types';
 import AiChat from './AiChat';
@@ -84,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-4 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <Bot size={28} className="text-emerald-500"/>
-          <h1 className="text-xl font-bold text-gray-900 tracking-wider">Dhaka Air Base Planner</h1>
+          <h1 className="text-xl font-bold text-gray-900 tracking-wider">AeroScope- Dhaka Edition</h1>
         </div>
       </div>
       

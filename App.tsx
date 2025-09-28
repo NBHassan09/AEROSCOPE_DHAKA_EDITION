@@ -81,7 +81,7 @@ const App: React.FC = () => {
       {
           id: uuidvv4(),
           sender: 'bot',
-          content: "Welcome to the Dhaka Air Base Planner! This tool helps analyze the urban landscape around key airbases. Select an airbase to begin.",
+          content: "Welcome to AeroScope- Dhaka Edition! This tool helps analyze the urban landscape around key airbases. Select an airbase to begin.",
       }
   ]);
   const [isLoading, setIsLoading] = useState(false);
