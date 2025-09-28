@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useCallback, useMemo } from 'react';
 import { v4 as uuidvv4 } from 'uuid';
 import Sidebar from './components/Sidebar';
@@ -19,6 +20,10 @@ import { uttaraSectors } from './data/uttaraSectors';
 import { keyAreas } from './data/keyAreas';
 import { environmentalData } from './data/environmentalData';
 import { dhakaFireStations } from './data/fireStations';
+import { generateLSTHeatmapLayer } from './data/lstHeatmap';
+import { aodData } from './data/aodData';
+import { ndviData } from './data/ndviData';
+
 
 const airbases: AirbaseLocation[] = [
     { name: 'Hazrat Shahjalal Int. Airport (HSIA)', coordinates: [23.8436, 90.3973] },
@@ -79,6 +84,10 @@ const App: React.FC = () => {
         }
     };
   }, []);
+  
+  const lstHeatmapLayer: MapLayer = useMemo(() => {
+    return generateLSTHeatmapLayer(airbases);
+  }, []);
 
   const [layers, setLayers] = useState<MapLayer[]>([
      {
@@ -88,6 +97,19 @@ const App: React.FC = () => {
       isVisible: true,
     },
     trafficHeatmapLayer,
+    lstHeatmapLayer,
+    {
+      id: 'aod-dhaka',
+      name: 'Air Particulates (AOD)',
+      data: aodData,
+      isVisible: false,
+    },
+    {
+      id: 'ndvi-dhaka',
+      name: 'Urban Greenness (NDVI)',
+      data: ndviData,
+      isVisible: false,
+    },
     {
       id: 'fire-stations-dhaka',
       name: 'Fire Stations in Dhaka',
@@ -194,7 +216,11 @@ const App: React.FC = () => {
           // Keep the base airbase layer visible
           return { ...layer, isVisible: true };
         }
-        // Hide all other layers
+        // Hide all other layers, except for newly added AI layers
+        const isAiLayer = !['traffic-heatmap', 'lst-heatmap', 'aod-dhaka', 'ndvi-dhaka', 'fire-stations-dhaka', 'schools-dhaka', 'hospitals-dhaka', 'uttara-sectors', 'key-areas-dhaka', 'airbases-dhaka'].includes(layer.id);
+        if (isAiLayer) {
+            return layer;
+        }
         return { ...layer, isVisible: false };
       })
     );
@@ -304,7 +330,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen w-screen bg-slate-900 text-slate-200">
+    <div className="flex h-screen w-screen bg-gray-50 text-gray-800">
       <Sidebar
         page={page}
         onSetPage={setPage}

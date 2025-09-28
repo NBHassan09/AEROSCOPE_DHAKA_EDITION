@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import type { MapLayer, AiResponseMessage, AirbaseLocation } from '../types';
 import AiChat from './AiChat';
@@ -57,42 +58,42 @@ const Sidebar: React.FC<SidebarProps> = ({
 
 
   return (
-    <aside className="w-96 h-screen bg-slate-800/50 backdrop-blur-sm border-r border-slate-700 flex flex-col shadow-2xl relative overflow-hidden">
-      <div className="p-4 border-b border-slate-700 flex items-center justify-between">
+    <aside className="w-96 h-screen bg-white/80 backdrop-blur-sm border-r border-gray-200 flex flex-col shadow-2xl relative overflow-hidden">
+      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <Bot size={28} className="text-cyan-400"/>
-          <h1 className="text-xl font-bold text-slate-100 tracking-wider">Dhaka Air Base Planner</h1>
+          <Bot size={28} className="text-emerald-500"/>
+          <h1 className="text-xl font-bold text-gray-900 tracking-wider">Dhaka Air Base Planner</h1>
         </div>
       </div>
       
       {/* Page Navigation */}
-      <div className="p-2 border-b border-slate-700">
+      <div className="p-2 border-b border-gray-200">
         <div className="flex space-x-2">
             <button
                 onClick={() => onSetPage('map')}
                 title="Map View"
-                className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'map' ? 'bg-cyan-600 text-white' : 'bg-slate-700/50 hover:bg-slate-700'}`}
+                className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'map' ? 'bg-emerald-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
             >
                 Map
             </button>
             <button
                 onClick={() => onSetPage('analysis')}
                 title="Analysis Dashboard"
-                className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'analysis' ? 'bg-cyan-600 text-white' : 'bg-slate-700/50 hover:bg-slate-700'}`}
+                className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'analysis' ? 'bg-emerald-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
             >
                 Analysis
             </button>
             <button
                 onClick={() => onSetPage('methodology')}
                 title="Methodology"
-                className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'methodology' ? 'bg-cyan-600 text-white' : 'bg-slate-700/50 hover:bg-slate-700'}`}
+                className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'methodology' ? 'bg-emerald-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
             >
                 Methodology
             </button>
             <button
                 onClick={() => onSetPage('about')}
                 title="About"
-                className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'about' ? 'bg-cyan-600 text-white' : 'bg-slate-700/50 hover:bg-slate-700'}`}
+                className={`flex-1 text-center font-bold py-2 px-1 rounded-md transition-colors text-xs ${page === 'about' ? 'bg-emerald-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
             >
                 About
             </button>
@@ -102,12 +103,12 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="flex-1 p-4 overflow-y-auto space-y-6">
         {page === 'map' && (
           <>
-            <div className="space-y-4 bg-slate-900/40 p-3 rounded-lg border border-slate-700/50">
-                <h2 className="text-lg font-semibold text-slate-300 flex items-center">
+            <div className="space-y-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-700 flex items-center">
                     <Lightbulb className="mr-2 text-yellow-400" size={20} />
                     Quick Tips
                 </h2>
-                <ul className="text-sm text-slate-400 list-disc list-inside space-y-1">
+                <ul className="text-sm text-gray-600 list-disc list-inside space-y-1">
                     <li>Click an airbase on the map or list to focus.</li>
                     <li>Click a school or hospital to see its distance from the nearest airbase.</li>
                     <li>Use the AI Chat to add new data layers to the map.</li>
@@ -124,10 +125,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
       </div>
 
-      <div className="p-4 border-t border-slate-700">
+      <div className="p-4 border-t border-gray-200">
         <button
           onClick={handleOpenChat}
-          className="w-full flex items-center justify-center space-x-2 bg-cyan-600 text-white font-bold py-2 px-4 rounded-md hover:bg-cyan-500 transition-colors"
+          className="w-full flex items-center justify-center space-x-2 bg-emerald-600 text-white font-bold py-2 px-4 rounded-md hover:bg-emerald-500 transition-colors"
         >
           <MessageSquarePlus size={20} />
           <span>Open Planning AI Chat</span>
@@ -137,7 +138,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Collapsible Chat Panel */}
       {isChatRendered && (
         <div
-            className={`absolute bottom-0 left-0 w-full h-full bg-slate-800/70 backdrop-blur-md flex flex-col transition-transform duration-300 ease-in-out ${
+            className={`absolute bottom-0 left-0 w-full h-full bg-white/90 backdrop-blur-md flex flex-col transition-transform duration-300 ease-in-out ${
             isChatOpen ? 'translate-y-0' : 'translate-y-full'
             }`}
         >

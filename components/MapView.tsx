@@ -1,5 +1,6 @@
 
 
+
 import React from 'react';
 import { MapContainer, TileLayer, GeoJSON, Popup, useMap, Circle } from 'react-leaflet';
 import type { MapLayer, AirbaseLocation } from '../types';
@@ -14,47 +15,69 @@ const tileLayerUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/
 const tileLayerAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
 const defaultPolygonStyle = {
-  color: '#0891b2', weight: 2, opacity: 0.8, fillColor: '#22d3ee', fillOpacity: 0.4,
+  color: '#047857', weight: 2, opacity: 0.8, fillColor: '#10b981', fillOpacity: 0.4,
 };
 
 const styles = {
-  default: { point: { radius: 6, fillColor: "#06b6d4", color: "#0e7490", weight: 2, opacity: 1, fillOpacity: 0.8 }, polygon: defaultPolygonStyle },
+  default: { point: { radius: 6, fillColor: "#10b981", color: "#047857", weight: 2, opacity: 1, fillOpacity: 0.8 }, polygon: defaultPolygonStyle },
 };
 
 // --- Heatmap Styling ---
-const getColorForIntensity = (intensity: number) => {
-    // Transition from a light pink to a vibrant magenta for a "hot" effect
-    const lowColor = { r: 249, g: 168, b: 212 }; // A light pink (tailwind pink-300)
-    const highColor = { r: 190, g: 24, b: 93 };  // A deep magenta (tailwind pink-700)
-    
-    // Linear interpolation for a smooth gradient
+const getTrafficColor = (intensity: number) => {
+    const lowColor = { r: 249, g: 168, b: 212 }; // tailwind pink-300
+    const highColor = { r: 190, g: 24, b: 93 };  // tailwind pink-700
     const r = lowColor.r + (highColor.r - lowColor.r) * intensity;
     const g = lowColor.g + (highColor.g - lowColor.g) * intensity;
     const b = lowColor.b + (highColor.b - lowColor.b) * intensity;
-
     return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
 }
 
-const styleHeatmapPoint = (feature: Feature) => {
+const styleTrafficPoint = (feature: Feature) => {
     const intensity = feature.properties?.intensity || 0;
-    // Non-linear opacity scaling to make hotspots more vibrant
-    // Using Math.pow makes the opacity increase faster for higher intensity values
     const opacity = 0.1 + Math.pow(intensity, 2) * 0.8; 
-    return {
-        radius: 3,
-        fillColor: getColorForIntensity(intensity),
-        color: 'transparent', // No border color for a smoother look
-        weight: 0,
-        opacity: opacity,
-        fillOpacity: opacity,
-    };
+    return { radius: 3, fillColor: getTrafficColor(intensity), color: 'transparent', weight: 0, opacity: opacity, fillOpacity: opacity };
 };
+
+const getLSTColor = (intensity: number) => {
+    if (intensity < 0.5) {
+        const r = 96 + (253 - 96) * (intensity * 2);
+        const g = 165 + (224 - 165) * (intensity * 2);
+        const b = 250 - (250 - 15) * (intensity * 2);
+        return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+    } else {
+        const r = 253 + (239 - 253) * ((intensity - 0.5) * 2);
+        const g = 224 - (224 - 68) * ((intensity - 0.5) * 2);
+        const b = 15 - (15 - 68) * ((intensity - 0.5) * 2);
+        return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+    }
+}
+
+const styleLSTPoint = (feature: Feature) => {
+    const intensity = feature.properties?.intensity || 0;
+    const opacity = 0.1 + Math.pow(intensity, 2) * 0.8; 
+    return { radius: 4, fillColor: getLSTColor(intensity), color: 'transparent', weight: 0, opacity: opacity, fillOpacity: opacity };
+};
+
+const getAODColor = (intensity: number) => {
+    const r = 255 - 150 * intensity;
+    const g = 235 - 180 * intensity;
+    const b = 150 - 150 * intensity;
+    return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+}
+
+const getNDVIColor = (ndvi: number) => {
+    const clampedNdvi = Math.max(0, Math.min(1, ndvi));
+    const r = 167 - 140 * clampedNdvi;
+    const g = 242 - 140 * clampedNdvi;
+    const b = 158 - 140 * clampedNdvi;
+    return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+}
 
 // --- Custom Icon Logic ---
 const createAirbaseIcon = () => L.divIcon({
   html: ReactDOMServer.renderToString(
-    <div className="bg-slate-800/80 p-1 rounded-full shadow-lg">
-      <Plane size={24} color="#f0f9ff" />
+    <div className="bg-white/80 p-1 rounded-full shadow-lg">
+      <Plane size={24} color="#047857" />
     </div>
   ),
   className: 'bg-transparent border-0',
@@ -67,7 +90,7 @@ const createSectorIcon = (name: string) => {
     return L.divIcon({
         html: ReactDOMServer.renderToString(
             <div className="relative flex items-center justify-center">
-                <MapPin size={32} color="#4f46e5" fill="#c7d2fe"/>
+                <MapPin size={32} color="#059669" fill="#6ee7b7"/>
                 <span className="absolute text-white text-xs font-bold" style={{top: '6px'}}>{number}</span>
             </div>
         ),
@@ -81,7 +104,7 @@ const createKeyAreaIcon = () => {
     return L.divIcon({
         html: ReactDOMServer.renderToString(
             <div className="relative flex items-center justify-center">
-                 <MapPin size={32} color="#ec4899" fill="#fbcfe8"/>
+                 <MapPin size={32} color="#0d9488" fill="#5eead4"/>
             </div>
         ),
         className: 'bg-transparent border-0',
@@ -93,7 +116,7 @@ const createKeyAreaIcon = () => {
 
 const createSchoolIcon = () => L.divIcon({
     html: ReactDOMServer.renderToString(
-      <div className="flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full border-2 border-white shadow-md">
+      <div className="flex items-center justify-center w-6 h-6 bg-emerald-600 rounded-full border-2 border-white shadow-md">
         <School size={14} color="white" />
       </div>
     ),
@@ -126,12 +149,9 @@ const createFireStationIcon = () => L.divIcon({
 
 
 const pointToLayer = (layer: MapLayer) => (feature: GeoJSON.Feature, latlng: L.LatLng): L.Layer => {
-  // Use unique ID for robust identification of the heatmap layer
-  if (layer.id === 'traffic-heatmap') {
-      return L.circleMarker(latlng, styleHeatmapPoint(feature));
-  }
+  if (layer.id === 'traffic-heatmap') return L.circleMarker(latlng, styleTrafficPoint(feature));
+  if (layer.id === 'lst-heatmap') return L.circleMarker(latlng, styleLSTPoint(feature));
   
-  // Fallback to name-based identification for other layers
   const name = layer.name.toLowerCase();
   if (name.includes('air base')) return L.marker(latlng, { icon: createAirbaseIcon() });
   if (name.includes('fire station')) return L.marker(latlng, { icon: createFireStationIcon() });
@@ -144,7 +164,20 @@ const pointToLayer = (layer: MapLayer) => (feature: GeoJSON.Feature, latlng: L.L
   return L.circleMarker(latlng, style);
 };
 
-const styleFeature = () => styles.default.polygon;
+const styleFeature = (layer: MapLayer) => (feature: Feature | undefined) => {
+    if (!feature) return {};
+    const layerName = layer.name.toLowerCase();
+    if (layerName.includes('particulate')) { // AOD
+        const intensity = feature.properties?.aod_intensity || 0;
+        return { ...defaultPolygonStyle, fillColor: getAODColor(intensity), fillOpacity: 0.5, color: '#ca8a04', weight: 1 };
+    }
+    if (layerName.includes('greenness')) { // NDVI
+        const ndvi = feature.properties?.ndvi || 0;
+        return { ...defaultPolygonStyle, fillColor: getNDVIColor(ndvi), fillOpacity: 0.6, color: '#16a34a', weight: 1 };
+    }
+    return styles.default.polygon;
+};
+
 
 const createOnEachFeature = (
     currentLayer: MapLayer,
@@ -153,9 +186,7 @@ const createOnEachFeature = (
     onSelectSector: (sector: Feature) => void,
     onSelectAirbase: (airbaseName: string) => void
 ) => (feature: Feature, layer: L.Layer) => {
-  if (currentLayer.id === 'traffic-heatmap') {
-      return;
-  }
+  if (currentLayer.id.includes('heatmap')) return;
   
   const layerName = currentLayer.name.toLowerCase();
   const name = feature.properties?.name;
@@ -163,7 +194,6 @@ const createOnEachFeature = (
   if (name) {
     if (layerName.includes('sector')) {
       layer.on('click', () => onSelectSector(feature));
-      // Sectors open the inspector, so they don't get a standard popup.
       return; 
     }
 
@@ -171,41 +201,38 @@ const createOnEachFeature = (
     
     if (layerName.includes('school')) {
         const details = [];
-        
         const fireStationLayers = allLayers.filter(l => l.id.includes('fire-station'));
         const nearestFireStation = findNearest(feature, fireStationLayers);
-        if (nearestFireStation.feature?.properties?.name) {
-            details.push(`<strong>Nearest Fire Station:</strong> ${nearestFireStation.feature.properties.name} (${formatDistance(nearestFireStation.distance)})`);
-        }
-
+        if (nearestFireStation.feature?.properties?.name) details.push(`<strong>Nearest Fire Station:</strong> ${nearestFireStation.feature.properties.name} (${formatDistance(nearestFireStation.distance)})`);
         const nearestAirbase = findNearestAirbase(feature, airbases);
-        if (nearestAirbase.airbase) {
-            details.push(`<strong>Nearest Airbase:</strong> ${nearestAirbase.airbase.name} (${formatDistance(nearestAirbase.distance)})`);
-        }
-
+        if (nearestAirbase.airbase) details.push(`<strong>Nearest Airbase:</strong> ${nearestAirbase.airbase.name} (${formatDistance(nearestAirbase.distance)})`);
         const hospitalLayers = allLayers.filter(l => l.id.includes('hospitals'));
         const nearestHospital = findNearest(feature, hospitalLayers);
-        if (nearestHospital.feature?.properties?.name) {
-            details.push(`<strong>Nearest Hospital:</strong> ${nearestHospital.feature.properties.name} (${formatDistance(nearestHospital.distance)})`);
-        }
-        
-        if (details.length > 0) {
-            popupContent += `<br/><hr class="my-1 border-gray-500"/>` + details.join('<br/>');
-        }
-
+        if (nearestHospital.feature?.properties?.name) details.push(`<strong>Nearest Hospital:</strong> ${nearestHospital.feature.properties.name} (${formatDistance(nearestHospital.distance)})`);
+        if (details.length > 0) popupContent += `<br/><hr class="my-1 border-gray-500"/>` + details.join('<br/>');
     } else if (layerName.includes('hospital')) {
         const nearest = findNearestAirbase(feature, airbases);
-        if (nearest.airbase) {
-            popupContent += `<br/><hr class="my-1 border-gray-500"/><strong>Nearest Airbase:</strong> ${nearest.airbase.name} (${formatDistance(nearest.distance)})`;
-        }
+        if (nearest.airbase) popupContent += `<br/><hr class="my-1 border-gray-500"/><strong>Nearest Airbase:</strong> ${nearest.airbase.name} (${formatDistance(nearest.distance)})`;
+    } else if (layerName.includes('particulate')) {
+        const intensity = feature.properties?.aod_intensity;
+        popupContent += `<br/><hr class="my-1 border-gray-500"/><strong>AOD Intensity:</strong> ${intensity?.toFixed(2)}`;
+    } else if (layerName.includes('greenness')) {
+        const ndvi = feature.properties?.ndvi;
+        popupContent += `<br/><hr class="my-1 border-gray-500"/><strong>NDVI Value:</strong> ${ndvi?.toFixed(2)}`;
     }
+
 
     if (layerName.includes('air base')) {
       layer.on('click', () => onSelectAirbase(name));
     }
     
-    // Key areas and other layers will just get a simple popup with their name.
     layer.bindPopup(popupContent);
+    
+    // Add hover effect for polygons
+    if (layer instanceof L.Polygon) {
+        layer.on('mouseover', () => layer.setStyle({ weight: 4, color: '#047857' }));
+        layer.on('mouseout', () => layer.setStyle(styleFeature(currentLayer)(feature)));
+    }
   }
 };
 
@@ -254,7 +281,7 @@ const MapView: React.FC<MapViewProps> = ({ layers, airbases, selectedSector, sel
           data={layer.data}
           pointToLayer={pointToLayer(layer)}
           onEachFeature={createOnEachFeature(layer, layers, airbases, onSelectSector, onSelectAirbase)}
-          style={styleFeature}
+          style={styleFeature(layer)}
         />
       ))}
       
@@ -262,7 +289,7 @@ const MapView: React.FC<MapViewProps> = ({ layers, airbases, selectedSector, sel
         <Circle 
             center={selectedSectorCoords} 
             radius={200} 
-            pathOptions={{ color: '#3b82f6', fillColor: '#60a5fa', fillOpacity: 0.3, weight: 2 }}
+            pathOptions={{ color: '#059669', fillColor: '#34d399', fillOpacity: 0.3, weight: 2 }}
         />
        )}
 
