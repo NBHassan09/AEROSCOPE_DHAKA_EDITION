@@ -67,6 +67,15 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script>
+      // In a real-world application, API keys should be handled securely and not exposed on the client-side.
+      // This is a workaround for this specific environment to make the API key available as process.env.API_KEY.
+      window.process = {
+        env: {
+          API_KEY: "AIzaSyCmUBS-5iSHk_K4W9Lt1Xh6OWPxeqH1B9A"
+        }
+      };
+    </script>
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
