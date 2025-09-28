@@ -18,6 +18,10 @@
         -moz-osx-font-smoothing: grayscale;
         background-color: #f9fafb; /* Equivalent to tailwind bg-gray-50 */
       }
+      .street-highlight-layer {
+        /* This filter converts the black lines of the tile layer to a vibrant yellow */
+        filter: invert(88%) sepia(61%) saturate(5833%) hue-rotate(359deg) brightness(105%) contrast(101%);
+      }
       .leaflet-container {
         background: #f3f4f6; /* bg-gray-100 */
       }

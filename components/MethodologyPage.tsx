@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Database, BrainCircuit, BarChart3, TestTube2, Layers } from 'lucide-react';
 
@@ -14,25 +15,38 @@ const MethodologyPage: React.FC = () => {
           {/* Data Sources Section */}
           <div className="bg-white p-6 rounded-lg border border-gray-200">
             <h2 className="text-2xl font-semibold mb-4 flex items-center"><Database size={24} className="mr-3 text-emerald-500"/>Data Sources</h2>
-            <p className="text-gray-600 mb-4">To evaluate the urban environment and safety conditions around the three key airbases, we collected and processed satellite-derived and geospatial datasets for the period 2019–2024.</p>
+            <p className="text-gray-600 mb-4">To evaluate the urban environment around the three key airbases, we integrated several satellite-derived and geospatial datasets.</p>
             <ul className="list-disc list-inside space-y-4 text-gray-700">
               <li>
-                <strong className="text-gray-900">Nitrogen Dioxide (NO₂) Concentrations:</strong> Sourced from the <strong className="text-gray-900">NASA Sentinel-5P dataset (COPERNICUS/S5P/NRTI/L3_NO2)</strong>. Data was obtained via the Google Earth Engine (GEE) Python API, providing daily tropospheric NO₂ column densities at an approximate <strong className="text-gray-900">7 km spatial resolution</strong>. This serves as a primary indicator for air quality and pollution from traffic and industrial sources.
+                <strong className="text-gray-900">Environmental Satellite Data (2019-2024):</strong>
+                <ul className="list-['-_'] list-inside ml-6 mt-2 space-y-2 text-gray-600">
+                    <li>
+                        <strong>Nitrogen Dioxide (NO₂):</strong> Sourced from the <strong className="text-gray-900">NASA Sentinel-5P dataset</strong>. This provides daily measurements of air pollution, which is a key indicator of traffic and industrial activity.
+                    </li>
+                    <li>
+                        <strong>Nighttime Lights (NTL):</strong> Sourced from the <strong className="text-gray-900">NASA VIIRS dataset</strong>. This data acts as a proxy for urban density and economic activity, showing patterns of human settlement and infrastructure.
+                    </li>
+                </ul>
               </li>
               <li>
-                <strong className="text-gray-900">Traffic & Urban Activity:</strong> Traffic congestion patterns and urban activity levels were derived from <strong className="text-gray-900">NASA Earth Observation urban mobility indicators</strong> and <strong className="text-gray-900">VIIRS Nighttime Lights (NTL)</strong> data. These datasets, combined with global road network data, quantify relative congestion levels and economic activity around each airbase.
-              </li>
-               <li>
-                <strong className="text-gray-900">Urban Heat Island (LST):</strong> Land Surface Temperature data, derived from <strong className="text-gray-900">NASA's MODIS or Landsat satellites</strong>, is used to model the urban heat island effect. This provides a heatmap of temperature variations across the city, crucial for assessing public health risks.
+                <strong className="text-gray-900">Urban Temperature Data (2014-2024):</strong> A time-series dataset of annual maximum temperatures for multiple locations across Dhaka. This data is used to analyze local climate trends and temperature variations over time.
               </li>
               <li>
-                <strong className="text-gray-900">Particulate Matter Pollution (AOD):</strong> Aerosol Optical Depth from <strong className="text-gray-900">NASA's MODIS or VIIRS sensors</strong> serves as a proxy for fine particulate matter (PM2.5). This layer provides a more complete picture of air quality beyond gaseous pollutants.
+                <strong className="text-gray-900">Dynamic World Land Cover:</strong> This dataset from <strong className="text-gray-900">Google & WRI</strong>, accessed via the Resource Watch API, provides a near real-time, high-resolution view of land use classifications (e.g., water, trees, built-up areas). It is used to understand the physical makeup of the areas surrounding the airbases.
               </li>
               <li>
-                <strong className="text-gray-900">Urban Greenness (NDVI):</strong> The Normalized Difference Vegetation Index (NDVI) from <strong className="text-gray-900">Landsat or MODIS</strong> measures the density and health of vegetation. This allows for the identification of areas lacking green space, which is critical for quality of life and heat mitigation.
+                <strong className="text-gray-900">Geographic Base & Overlay Maps:</strong>
+                 <ul className="list-['-_'] list-inside ml-6 mt-2 space-y-2 text-gray-600">
+                    <li>
+                        <strong>Base Map:</strong> The application uses the <strong className="text-gray-900">Carto Positron</strong> tile set, which provides a clean, muted background to emphasize data layers.
+                    </li>
+                    <li>
+                        <strong>Street Highlights Overlay:</strong> The <strong className="text-gray-900">Carto Voyager</strong> tile set is used as an optional overlay to provide detailed street networks, place names, and points of interest.
+                    </li>
+                </ul>
               </li>
               <li>
-                <strong className="text-gray-900">Geographic Base Layers & POIs:</strong> The base map tiles are provided by CartoDB via OpenStreetMap. Foundational data for schools, hospitals, fire stations, and other points of interest are curated from OpenStreetMap (OSM) to provide a rich context of urban infrastructure.
+                <strong className="text-gray-900">Points of Interest (POIs):</strong> Foundational data for schools, hospitals, fire stations, and other key urban features are curated from <strong className="text-gray-900">OpenStreetMap (OSM)</strong>, providing a rich context of urban infrastructure.
               </li>
             </ul>
           </div>
@@ -59,17 +73,20 @@ const MethodologyPage: React.FC = () => {
             <p className="text-gray-600 mb-4">Our analysis adheres to international urban planning standards to ensure that the insights are relevant, accurate, and actionable for assessing safety and infrastructure exposure.</p>
             <ul className="list-disc list-inside space-y-4 text-gray-700">
               <li>
-                <strong className="text-gray-900">Zone of Influence Definition:</strong> In line with international aviation planning policies, circular buffers with a <strong className="text-gray-900">7 km radius</strong> were created around each airbase. This defines the primary "airport influence area," where the impacts of noise, emissions, and operational activities are most significant. Only observations within these buffers were retained for analysis.
+                <strong className="text-gray-900">Zone of Influence Definition:</strong> In line with international aviation planning policies, circular buffers with a <strong className="text-gray-900">7 km radius</strong> were created around each airbase. This defines the primary "airport influence area," where the impacts of noise, emissions, and operational activities are most significant.
               </li>
               <li>
-                <strong className="text-gray-900">Temporal Aggregation:</strong> To identify long-term trends and seasonal patterns, daily NO₂ values were aggregated to compute monthly and annual mean concentrations. Similarly, traffic and NTL indicators were summarized per buffer zone per year, allowing for consistent year-over-year comparisons.
+                <strong className="text-gray-900">Temporal Aggregation:</strong> To identify long-term trends and seasonal patterns, daily NO₂ values were aggregated to compute monthly and annual mean concentrations. Similarly, NTL indicators were summarized per buffer zone per year, allowing for consistent year-over-year comparisons.
+              </li>
+              <li>
+                 <strong className="text-gray-900">Trend Visualization:</strong> Interactive line charts are used to visualize time-series data, such as environmental metrics and temperature. Users can compare trends across different locations or focus on a single area over time, which helps in identifying long-term patterns, seasonality, and anomalies.
               </li>
                <li>
                  <strong className="text-gray-900">Proximity Analysis:</strong> To assess infrastructure accessibility and risk, the application calculates distances between points of interest (e.g., schools, hospitals) and airbases or other features. This is performed using the Haversine formula (via Leaflet) for accurate great-circle distance measurements.
               </li>
                <li>
-                <strong className="text-gray-900">Integrated Assessment:</strong> By combining environmental data (NO₂) with urban activity metrics (NTL, traffic indices) and infrastructure locations (schools, hospitals), the methodology supports a holistic assessment. This enables urban planners to evaluate safety conditions, identify vulnerable areas, and make informed decisions regarding infrastructure development and zoning around these critical airbases.
-              </li>
+                <strong className="text-gray-900">Integrated Assessment:</strong> By combining environmental data (NO₂) with urban activity metrics (NTL) and infrastructure locations (schools, hospitals), the methodology supports a holistic assessment. This enables urban planners to evaluate safety conditions, identify vulnerable areas, and make informed decisions regarding infrastructure development and zoning around these critical airbases.
+               </li>
             </ul>
           </div>
           

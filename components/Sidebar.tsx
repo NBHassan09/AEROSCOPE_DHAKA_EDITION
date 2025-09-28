@@ -1,11 +1,12 @@
 
 
 import React, { useState } from 'react';
-import type { MapLayer, AiResponseMessage, AirbaseLocation } from '../types';
+import type { MapLayer, AiResponseMessage, AirbaseLocation, OverlayTileLayer } from '../types';
 import AiChat from './AiChat';
 import LayerList from './LayerList';
 import AirbaseList from './AirbaseList';
-import { Bot, MessageSquarePlus, Lightbulb } from 'lucide-react';
+import OverlayLayerControl from './OverlayLayerControl';
+import { Bot, MessageSquarePlus, Lightbulb, Globe, ChevronDown, ChevronUp, Layers } from 'lucide-react';
 
 interface SidebarProps {
   page: 'map' | 'analysis' | 'methodology' | 'about';
@@ -20,6 +21,15 @@ interface SidebarProps {
   onFlyTo: (location: AirbaseLocation) => void;
   selectedAirbase: AirbaseLocation | null;
   onClearAirbaseSelection: () => void;
+  streetLayer: OverlayTileLayer;
+  onToggleStreetLayer: () => void;
+  onSetStreetLayerOpacity: (opacity: number) => void;
+  dynamicWorldLayer: OverlayTileLayer;
+  onToggleDynamicWorld: () => void;
+  onSetDynamicWorldOpacity: (opacity: number) => void;
+  waterNaturalLayer: OverlayTileLayer;
+  onToggleWaterNaturalLayer: () => void;
+  onSetWaterNaturalLayerOpacity: (opacity: number) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -35,9 +45,20 @@ const Sidebar: React.FC<SidebarProps> = ({
   onFlyTo,
   selectedAirbase,
   onClearAirbaseSelection,
+  streetLayer,
+  onToggleStreetLayer,
+  onSetStreetLayerOpacity,
+  dynamicWorldLayer,
+  onToggleDynamicWorld,
+  onSetDynamicWorldOpacity,
+  waterNaturalLayer,
+  onToggleWaterNaturalLayer,
+  onSetWaterNaturalLayerOpacity,
 }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isChatRendered, setIsChatRendered] = useState(false);
+  const [isOverlaysExpanded, setIsOverlaysExpanded] = useState(true);
+  const [isDataLayersExpanded, setIsDataLayersExpanded] = useState(true);
 
   const handleOpenChat = () => {
     setIsChatRendered(true);
@@ -120,7 +141,48 @@ const Sidebar: React.FC<SidebarProps> = ({
               selectedAirbase={selectedAirbase} 
               onClearSelection={onClearAirbaseSelection}
             />
-            <LayerList layers={layers.filter(l => !l.id.includes('airbase'))} onToggle={onToggleLayer} onRemove={onRemoveLayer} />
+            <div className="space-y-2">
+                <button onClick={() => setIsOverlaysExpanded(!isOverlaysExpanded)} className="w-full flex justify-between items-center text-lg font-semibold text-gray-800">
+                    <span className="flex items-center">
+                        <Globe className="mr-2 text-emerald-500" size={20} />
+                        Overlay Layers
+                    </span>
+                    {isOverlaysExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                </button>
+                {isOverlaysExpanded && (
+                    <div className="pl-1 space-y-2 pt-2 animate-fade-in">
+                        <OverlayLayerControl
+                            layer={streetLayer}
+                            onToggle={onToggleStreetLayer}
+                            onSetOpacity={onSetStreetLayerOpacity}
+                        />
+                        <OverlayLayerControl
+                            layer={waterNaturalLayer}
+                            onToggle={onToggleWaterNaturalLayer}
+                            onSetOpacity={onSetWaterNaturalLayerOpacity}
+                        />
+                        <OverlayLayerControl
+                            layer={dynamicWorldLayer}
+                            onToggle={onToggleDynamicWorld}
+                            onSetOpacity={onSetDynamicWorldOpacity}
+                        />
+                    </div>
+                )}
+            </div>
+            <div className="space-y-2">
+                <button onClick={() => setIsDataLayersExpanded(!isDataLayersExpanded)} className="w-full flex justify-between items-center text-lg font-semibold text-gray-800">
+                    <span className="flex items-center">
+                        <Layers className="mr-2 text-emerald-500" size={20} />
+                        Data Layers
+                    </span>
+                    {isDataLayersExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                </button>
+                 {isDataLayersExpanded && (
+                    <div className="pl-1 pt-2 animate-fade-in">
+                        <LayerList layers={layers.filter(l => !l.id.includes('airbase'))} onToggle={onToggleLayer} onRemove={onRemoveLayer} />
+                    </div>
+                 )}
+            </div>
           </>
         )}
       </div>

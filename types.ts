@@ -7,6 +7,14 @@ export interface MapLayer {
   isVisible: boolean;
 }
 
+export interface OverlayTileLayer {
+  id: string;
+  name: string;
+  isVisible: boolean;
+  opacity: number;
+  tileUrl: string | null;
+}
+
 export type AiAction = 'ADD_LAYER' | 'INFO' | 'ERROR';
 
 export interface AiResponse {

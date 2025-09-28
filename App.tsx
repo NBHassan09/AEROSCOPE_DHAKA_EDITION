@@ -1,7 +1,4 @@
-
-
-
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { v4 as uuidvv4 } from 'uuid';
 import Sidebar from './components/Sidebar';
 import MapView from './components/MapView';
@@ -9,20 +6,16 @@ import SectorInspector from './components/SectorInspector';
 import AnalysisPage from './components/AnalysisPage';
 import MethodologyPage from './components/MethodologyPage';
 import AboutPage from './components/AboutPage';
-import type { MapLayer, AiResponseMessage, SectorInfo, AirbaseLocation } from './types';
+import type { MapLayer, AiResponseMessage, SectorInfo, AirbaseLocation, OverlayTileLayer } from './types';
 import { generateGeoData } from './services/geminiService';
-import { findNearest, generateRandomPointInRadius } from './utils/geo';
+import { findNearest } from './utils/geo';
 import type { FeatureCollection, Feature } from 'geojson';
 
 import { dhakaSchools } from './data/schools';
 import { dhakaHospitals } from './data/hospitals';
 import { uttaraSectors } from './data/uttaraSectors';
 import { keyAreas } from './data/keyAreas';
-import { environmentalData } from './data/environmentalData';
 import { dhakaFireStations } from './data/fireStations';
-import { generateLSTHeatmapLayer } from './data/lstHeatmap';
-import { aodData } from './data/aodData';
-import { ndviData } from './data/ndviData';
 
 
 const airbases: AirbaseLocation[] = [
@@ -45,70 +38,12 @@ const airbasesGeoJSON: FeatureCollection = {
 
 const App: React.FC = () => {
 
-  const trafficHeatmapLayer: MapLayer = useMemo(() => {
-    const features: Feature[] = [];
-    
-    // Get all NTL values to find min/max for normalization
-    const allNtlValues = Object.values(environmentalData).flat().map(d => d.ntl).filter(ntl => ntl > 0);
-    const minNtl = Math.min(...allNtlValues);
-    const maxNtl = Math.max(...allNtlValues);
-
-    airbases.forEach(airbase => {
-        // Use the latest available NTL data for each airbase
-        const airbaseData = environmentalData[airbase.name];
-        if (!airbaseData || airbaseData.length === 0) return;
-        
-        const latestDataPoint = airbaseData[airbaseData.length - 1];
-        const ntlValue = latestDataPoint.ntl;
-
-        // Normalize NTL value to a 0-1 intensity scale
-        const intensity = (ntlValue - minNtl) / (maxNtl - minNtl);
-        
-        // Number of points to generate is proportional to NTL intensity (200 to 1500 points)
-        const numPoints = Math.floor(200 + intensity * 1300);
-
-        for (let i = 0; i < numPoints; i++) {
-            const randomPoint = generateRandomPointInRadius(airbase.coordinates, 7000); // 7km radius
-            randomPoint.properties = { intensity }; // Add intensity for styling
-            features.push(randomPoint);
-        }
-    });
-
-    return {
-        id: 'traffic-heatmap',
-        name: 'Traffic Congestion Heatmap',
-        isVisible: false,
-        data: {
-            type: 'FeatureCollection',
-            features: features,
-        }
-    };
-  }, []);
-  
-  const lstHeatmapLayer: MapLayer = useMemo(() => {
-    return generateLSTHeatmapLayer(airbases);
-  }, []);
-
   const [layers, setLayers] = useState<MapLayer[]>([
      {
       id: 'airbases-dhaka',
       name: 'Air Bases in Dhaka',
       data: airbasesGeoJSON,
       isVisible: true,
-    },
-    trafficHeatmapLayer,
-    lstHeatmapLayer,
-    {
-      id: 'aod-dhaka',
-      name: 'Air Particulates (AOD)',
-      data: aodData,
-      isVisible: false,
-    },
-    {
-      id: 'ndvi-dhaka',
-      name: 'Urban Greenness (NDVI)',
-      data: ndviData,
-      isVisible: false,
     },
     {
       id: 'fire-stations-dhaka',
@@ -139,7 +74,7 @@ const App: React.FC = () => {
       name: 'Key Areas in Dhaka',
       data: keyAreas,
       isVisible: false,
-    }
+    },
   ]);
 
   const [chatHistory, setChatHistory] = useState<AiResponseMessage[]>([
@@ -155,6 +90,75 @@ const App: React.FC = () => {
   const [flyTo, setFlyTo] = useState<{ coordinates: [number, number], zoom: number } | null>(null);
   const [page, setPage] = useState<'map' | 'analysis' | 'methodology' | 'about'>('about');
   const [selectedAirbase, setSelectedAirbase] = useState<AirbaseLocation | null>(null);
+  
+  const [streetLayer, setStreetLayer] = useState<OverlayTileLayer>({
+    id: 'street-highlight-layer',
+    name: 'Street Highlights',
+    isVisible: false,
+    opacity: 0.8,
+    tileUrl: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+  });
+
+  const [waterNaturalLayer, setWaterNaturalLayer] = useState<OverlayTileLayer>({
+    id: 'water-natural-layer',
+    name: 'Water & Natural Spaces',
+    isVisible: false,
+    opacity: 0.7,
+    tileUrl: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png',
+  });
+
+  const [dynamicWorldLayer, setDynamicWorldLayer] = useState<OverlayTileLayer>({
+    id: 'dynamic-world-layer',
+    name: 'Dynamic World Land Cover',
+    isVisible: false,
+    opacity: 0.8,
+    tileUrl: null,
+  });
+
+  useEffect(() => {
+    const fetchDynamicWorldTileUrl = async () => {
+      try {
+        const resp = await fetch('https://api.resourcewatch.org/v1/dataset?search=dynamic%20world&includes=layer,metadata');
+        if (!resp.ok) {
+          throw new Error('Resource Watch dataset search failed: ' + resp.status);
+        }
+        const ds = await resp.json();
+        
+        let tileUrl: string | null = null;
+
+        const extractTilesFromLayerObj = (layerObj: any) => {
+          const lc = layerObj?.attributes?.layerConfig;
+          const tiles = lc?.source?.tiles || lc?.body?.source?.tiles;
+          return Array.isArray(tiles) && tiles[0] ? tiles[0] : null;
+        };
+
+        if (Array.isArray(ds?.data)) {
+          for (const d of ds.data) {
+            const layers = d?.attributes?.layer;
+            if (Array.isArray(layers)) {
+              for (const L of layers) {
+                const maybeTiles = extractTilesFromLayerObj(L);
+                if (maybeTiles && /{z}.*{x}.*{y}/i.test(maybeTiles)) {
+                  tileUrl = maybeTiles;
+                  break;
+                }
+              }
+            }
+            if (tileUrl) break;
+          }
+        }
+        
+        if (tileUrl) {
+          setDynamicWorldLayer(prev => ({ ...prev, tileUrl }));
+        } else {
+          console.error("Could not find Dynamic World tiles in Resource Watch API response.");
+        }
+      } catch (err) {
+        console.error("Failed to load tiles/metadata from Resource Watch:", err);
+      }
+    };
+    fetchDynamicWorldTileUrl();
+  }, []);
 
   const handleSelectSector = useCallback((sector: Feature | null) => {
     setSelectedAirbase(null); // Hide circle when inspector opens
@@ -217,7 +221,7 @@ const App: React.FC = () => {
           return { ...layer, isVisible: true };
         }
         // Hide all other layers, except for newly added AI layers
-        const isAiLayer = !['traffic-heatmap', 'lst-heatmap', 'aod-dhaka', 'ndvi-dhaka', 'fire-stations-dhaka', 'schools-dhaka', 'hospitals-dhaka', 'uttara-sectors', 'key-areas-dhaka', 'airbases-dhaka'].includes(layer.id);
+        const isAiLayer = !['fire-stations-dhaka', 'schools-dhaka', 'hospitals-dhaka', 'uttara-sectors', 'key-areas-dhaka', 'airbases-dhaka'].includes(layer.id);
         if (isAiLayer) {
             return layer;
         }
@@ -294,6 +298,30 @@ const App: React.FC = () => {
   const removeLayer = useCallback((layerId: string) => {
     setLayers(layers => layers.filter(layer => layer.id !== layerId));
   }, []);
+
+  const toggleStreetLayerVisibility = useCallback(() => {
+    setStreetLayer(prev => ({ ...prev, isVisible: !prev.isVisible }));
+  }, []);
+
+  const setStreetLayerOpacity = useCallback((opacity: number) => {
+    setStreetLayer(prev => ({ ...prev, opacity }));
+  }, []);
+
+  const toggleWaterNaturalLayerVisibility = useCallback(() => {
+    setWaterNaturalLayer(prev => ({ ...prev, isVisible: !prev.isVisible }));
+  }, []);
+
+  const setWaterNaturalLayerOpacity = useCallback((opacity: number) => {
+    setWaterNaturalLayer(prev => ({ ...prev, opacity }));
+  }, []);
+
+  const toggleDynamicWorldVisibility = useCallback(() => {
+    setDynamicWorldLayer(prev => ({ ...prev, isVisible: !prev.isVisible }));
+  }, []);
+
+  const setDynamicWorldOpacity = useCallback((opacity: number) => {
+    setDynamicWorldLayer(prev => ({ ...prev, opacity }));
+  }, []);
   
   const renderPage = () => {
     switch(page) {
@@ -302,6 +330,9 @@ const App: React.FC = () => {
           <>
             <MapView 
                 layers={layers}
+                streetLayer={streetLayer}
+                dynamicWorldLayer={dynamicWorldLayer}
+                waterNaturalLayer={waterNaturalLayer}
                 airbases={airbases}
                 selectedSector={selectedSector}
                 selectedAirbase={selectedAirbase}
@@ -344,6 +375,15 @@ const App: React.FC = () => {
         onFlyTo={handleFlyTo}
         selectedAirbase={selectedAirbase}
         onClearAirbaseSelection={handleClearAirbaseSelection}
+        streetLayer={streetLayer}
+        onToggleStreetLayer={toggleStreetLayerVisibility}
+        onSetStreetLayerOpacity={setStreetLayerOpacity}
+        dynamicWorldLayer={dynamicWorldLayer}
+        onToggleDynamicWorld={toggleDynamicWorldVisibility}
+        onSetDynamicWorldOpacity={setDynamicWorldOpacity}
+        waterNaturalLayer={waterNaturalLayer}
+        onToggleWaterNaturalLayer={toggleWaterNaturalLayerVisibility}
+        onSetWaterNaturalLayerOpacity={setWaterNaturalLayerOpacity}
       />
       <main className="flex-1 h-full relative">
         {renderPage()}

@@ -1,9 +1,8 @@
 
 
-
 import React from 'react';
 import type { MapLayer } from '../types';
-import { Layers, Eye, EyeOff, Trash2 } from 'lucide-react';
+import { Eye, EyeOff, Trash2 } from 'lucide-react';
 
 interface LayerListProps {
   layers: MapLayer[];
@@ -13,11 +12,7 @@ interface LayerListProps {
 
 const LayerList: React.FC<LayerListProps> = ({ layers, onToggle, onRemove }) => {
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-        <Layers className="mr-2 text-emerald-500" size={20} />
-        Layers
-      </h2>
+    <div className="space-y-2">
       {layers.length === 0 ? (
         <p className="text-gray-500 text-sm p-3 bg-gray-100/50 rounded-md">
           No layers yet. Use the chat below to generate geographic data.

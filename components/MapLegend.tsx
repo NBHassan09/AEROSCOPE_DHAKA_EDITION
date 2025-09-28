@@ -1,5 +1,7 @@
+
+
 import React, { useState } from 'react';
-import { ChevronUp, ChevronDown, Plane, School, Hospital, Flame, MapPin } from 'lucide-react';
+import { ChevronUp, ChevronDown, Plane, School, Hospital, Flame, MapPin, Droplet, Trees } from 'lucide-react';
 
 const MapLegend: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -83,37 +85,49 @@ const MapLegend: React.FC = () => {
                 </div>
                 <span className="text-sm text-gray-700">Selected Airbase Radius (7km)</span>
             </div>
-
-            {/* Traffic Heatmap */}
-            <div className="flex items-center space-x-3">
-                 <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
-                    <div className="w-6 h-2 rounded-md bg-gradient-to-r from-pink-300 to-pink-700" />
-                </div>
-                <span className="text-sm text-gray-700">Traffic Congestion</span>
+            
+            {/* --- Divider --- */}
+            <div className="border-t border-gray-300 pt-3 mt-3">
+                <span className="font-semibold text-xs text-gray-600">Overlay Layers</span>
             </div>
-             {/* Urban Heat Island */}
+            
+            {/* Street Highlights */}
             <div className="flex items-center space-x-3">
-                 <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
-                    <div className="w-6 h-2 rounded-md bg-gradient-to-r from-blue-400 via-yellow-300 to-red-500" />
+                <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-sm bg-gray-100 border-2 border-gray-300 relative overflow-hidden">
+                        <div className="absolute top-1 right-0 w-full h-0.5 bg-gray-400"></div>
+                        <div className="absolute top-3 left-0 w-full h-1 bg-amber-500"></div>
+                        <div className="absolute bottom-1.5 left-0 w-full h-0.5 bg-gray-400"></div>
+                    </div>
                 </div>
-                <span className="text-sm text-gray-700">Urban Heat Island</span>
-            </div>
-
-            {/* Air Particulates (AOD) */}
-            <div className="flex items-center space-x-3">
-                 <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
-                    <div className="w-6 h-6 rounded-full bg-yellow-800/40 border-2 border-yellow-300" />
-                </div>
-                <span className="text-sm text-gray-700">Air Particulates (AOD)</span>
+                <span className="text-sm text-gray-700">Street Highlights</span>
             </div>
 
-            {/* Urban Greenness (NDVI) */}
-            <div className="flex items-center space-x-3">
-                 <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
-                    <div className="w-6 h-6 rounded-md bg-gradient-to-br from-lime-300 to-green-600" />
-                </div>
-                <span className="text-sm text-gray-700">Urban Greenness (NDVI)</span>
+            {/* Water & Natural Spaces */}
+           <div className="flex items-center space-x-3">
+               <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
+                   <div className="w-6 h-6 rounded-sm border-2 border-gray-300 bg-[#c5e1c5] relative overflow-hidden">
+                       <div className="absolute top-1/2 left-0 w-full h-1/2 bg-[#a3cbe1]"></div>
+                   </div>
+               </div>
+               <span className="text-sm text-gray-700">Water & Natural Spaces</span>
+           </div>
+
+            {/* --- Sub-Divider --- */}
+            <div className="border-t border-gray-200 pt-3 mt-2">
+                <span className="font-semibold text-xs text-gray-600">Dynamic World Land Cover</span>
             </div>
+            
+            {/* Dynamic World Items */}
+            <div className="flex items-center space-x-3"><div className="w-4 h-4 rounded-sm flex-shrink-0" style={{background: '#419bdf'}}></div><span className="text-sm text-gray-700">Water</span></div>
+            <div className="flex items-center space-x-3"><div className="w-4 h-4 rounded-sm flex-shrink-0" style={{background: '#397d49'}}></div><span className="text-sm text-gray-700">Trees</span></div>
+            <div className="flex items-center space-x-3"><div className="w-4 h-4 rounded-sm flex-shrink-0" style={{background: '#88b053'}}></div><span className="text-sm text-gray-700">Grass</span></div>
+            <div className="flex items-center space-x-3"><div className="w-4 h-4 rounded-sm flex-shrink-0" style={{background: '#7a87c6'}}></div><span className="text-sm text-gray-700">Flooded Vegetation</span></div>
+            <div className="flex items-center space-x-3"><div className="w-4 h-4 rounded-sm flex-shrink-0" style={{background: '#e49635'}}></div><span className="text-sm text-gray-700">Crops</span></div>
+            <div className="flex items-center space-x-3"><div className="w-4 h-4 rounded-sm flex-shrink-0" style={{background: '#dfc35a'}}></div><span className="text-sm text-gray-700">Shrub & Scrub</span></div>
+            <div className="flex items-center space-x-3"><div className="w-4 h-4 rounded-sm flex-shrink-0" style={{background: '#c4281b'}}></div><span className="text-sm text-gray-700">Built-up Area</span></div>
+            <div className="flex items-center space-x-3"><div className="w-4 h-4 rounded-sm flex-shrink-0" style={{background: '#a59b8f'}}></div><span className="text-sm text-gray-700">Bare Ground</span></div>
+            <div className="flex items-center space-x-3"><div className="w-4 h-4 rounded-sm flex-shrink-0" style={{background: '#b39fe1'}}></div><span className="text-sm text-gray-700">Snow & Ice</span></div>
         </div>
       )}
     </div>

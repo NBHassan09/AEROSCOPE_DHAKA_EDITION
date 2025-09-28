@@ -1,9 +1,7 @@
-
-
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { environmentalData } from '../data/environmentalData';
+import { maxTemperatureData } from '../data/temperatureData';
 import { BarChart2, Lightbulb, School, HeartPulse, Combine, MousePointer, Check, Wind, TrendingUp, AlertTriangle, Thermometer } from 'lucide-react';
 import type { TimeSeriesDataPoint } from '../types';
 
@@ -70,7 +68,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         <p className="font-bold text-gray-900 mb-2">{label}</p>
         {payload.map((pld: any) => (
           <div key={pld.dataKey} style={{ color: pld.color }}>
-            {pld.name}: {pld.dataKey.includes('no2') ? formatScientificJSX(pld.value) : pld.value.toFixed(2)}
+            {pld.name}: {pld.dataKey.includes('no2') ? formatScientificJSX(pld.value) : pld.value?.toFixed(2)}
           </div>
         ))}
       </div>
@@ -83,6 +81,12 @@ const AnalysisPage: React.FC = () => {
   const [selectedAirbases, setSelectedAirbases] = useState<string[]>(airbaseNames);
   const [visibleSeries, setVisibleSeries] = useState({ no2: true, ntl: true });
   const [isAnimated, setIsAnimated] = useState(false);
+  
+  const availableLocations = useMemo(() => {
+    const locations = maxTemperatureData.map(d => d.location).sort((a,b) => a.replace(/_/g, ' ').localeCompare(b.replace(/_/g, ' ')));
+    return ['All Areas', ...locations];
+  }, []);
+  const [selectedLocation, setSelectedLocation] = useState<string>('All Areas');
 
   useEffect(() => {
     const timer = setTimeout(() => setIsAnimated(true), 100);
@@ -137,6 +141,31 @@ const AnalysisPage: React.FC = () => {
     });
     return { chartData: sortedChartData, summaryStats: stats, alerts: highNo2Alerts.sort((a,b) => b.point.no2 - a.point.no2) };
   }, []);
+
+  const lineColors = useMemo(() => [
+    '#ef4444', '#3b82f6', '#10b981', '#f97316', '#8b5cf6', '#ec4899',
+    '#84cc16', '#06b6d4', '#eab308', '#d946ef', '#64748b', '#7e22ce',
+    '#be123c', '#059669', '#b45309',
+  ], []);
+
+  const temperatureChartData = useMemo(() => {
+    if (selectedLocation === 'All Areas') {
+        const yearDataMap: { [year: number]: { year: number, [location: string]: number } } = {};
+        maxTemperatureData.forEach(locationData => {
+            locationData.temperatures.forEach(record => {
+                if (!yearDataMap[record.year]) {
+                    yearDataMap[record.year] = { year: record.year };
+                }
+                yearDataMap[record.year][locationData.location] = record.maxTemp;
+            });
+        });
+        return Object.values(yearDataMap).sort((a, b) => a.year - b.year);
+    } else {
+        const locationData = maxTemperatureData.find(d => d.location === selectedLocation);
+        if (!locationData) return [];
+        return locationData.temperatures.sort((a, b) => a.year - b.year);
+    }
+  }, [selectedLocation]);
 
   const filteredSchoolData = schoolAnalysisData.filter(d => selectedAirbases.includes(d.name));
   const filteredHospitalData = hospitalAnalysisData.filter(d => selectedAirbases.includes(d.name));
@@ -254,6 +283,58 @@ const AnalysisPage: React.FC = () => {
                 <h2 className="text-xl font-semibold text-center mb-6">Hospitals within 7 km Radius</h2>
                  {filteredHospitalData.length > 0 ? (<div className="w-full flex justify-around items-end" style={{ height: '300px' }}>{filteredHospitalData.map(item => (<div key={item.name} className="flex flex-col items-center h-full justify-end text-center group"><p className="font-bold text-lg mb-1 text-gray-900">{item.value}</p><div className={`w-20 ${item.color} rounded-t-md group-hover:opacity-90 transition-all duration-700 ease-out`} style={{ height: isAnimated ? `${(item.value / maxHospitalValue) * 85}%` : '0%' }} title={`${item.name}: ${item.value} hospitals`}></div><p className="mt-2 text-sm text-gray-600 font-medium">{item.shortName}</p></div>))}</div>) : (<div className="flex items-center justify-center h-[300px] text-gray-500"><p>Select an airbase to view hospital data.</p></div>)}<div className="w-full border-t border-gray-200 mt-2"></div>
             </div>
+        </div>
+
+        {/* Max Temperature Chart */}
+        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-xl mt-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+            <h2 className="text-xl font-semibold flex items-center mb-2 sm:mb-0">
+              <Thermometer size={22} className="mr-3 text-red-500" />
+               {selectedLocation === 'All Areas' 
+                ? 'Maximum Temperature Comparison' 
+                : 'Maximum Temperature Variation Over Time'}
+            </h2>
+            <div className="flex items-center space-x-2">
+              <label htmlFor="location-select" className="text-sm font-medium text-gray-700">Select Area:</label>
+              <select
+                id="location-select"
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full p-2"
+              >
+                {availableLocations.map(loc => (
+                  <option key={loc} value={loc}>{loc.replace(/_/g, ' ')}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div style={{ width: '100%', height: 400 }}>
+            <ResponsiveContainer>
+              <LineChart data={temperatureChartData} margin={{ top: 5, right: 30, left: 0, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="year" interval={0} tick={{ fontSize: 12 }} />
+                <YAxis domain={['dataMin - 1', 'dataMax + 1']} label={{ value: 'Max Temperature (°C)', angle: -90, position: 'insideLeft' }} />
+                <Tooltip />
+                <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }}/>
+                {selectedLocation === 'All Areas' ? (
+                  maxTemperatureData.map((locData, index) => (
+                    <Line
+                      key={locData.location}
+                      type="monotone"
+                      dataKey={locData.location}
+                      name={locData.location.replace(/_/g, ' ')}
+                      stroke={lineColors[index % lineColors.length]}
+                      strokeWidth={2}
+                      dot={false}
+                      activeDot={{ r: 6 }}
+                    />
+                  ))
+                ) : (
+                  <Line type="monotone" dataKey="maxTemp" name={`Max Temp in ${selectedLocation.replace(/_/g, ' ')}`} stroke="#ef4444" strokeWidth={2} activeDot={{ r: 8 }} />
+                )}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         <div className="mt-10">
