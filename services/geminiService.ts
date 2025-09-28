@@ -1,4 +1,5 @@
 
+
 import { GoogleGenAI, Type } from "@google/genai";
 import type { AiResponse } from '../types';
 
@@ -49,12 +50,6 @@ const responseSchema = {
                   coordinates: {
                     type: Type.ARRAY,
                     description: "Coordinates array following GeoJSON spec. Can be nested for complex shapes.",
-                    // This schema technically describes a Point's coordinates: [num, num].
-                    // This is the simplest case and satisfies the 'items: missing field' error.
-                    // The model is expected to generate correctly nested arrays for other geometries.
-                    items: {
-                        type: Type.NUMBER
-                    }
                   }
                 },
                 required: ['type', 'coordinates']
@@ -64,7 +59,6 @@ const responseSchema = {
           }
         }
       },
-      nullable: true,
     },
     message: {
       type: Type.STRING,
@@ -95,6 +89,10 @@ export const generateGeoData = async (prompt: string): Promise<AiResponse> => {
     });
 
     const jsonText = response.text.trim();
+    if (!jsonText) {
+        throw new Error("AI returned an empty response string.");
+    }
+    
     const parsedResponse: AiResponse = JSON.parse(jsonText);
 
     // Basic validation
