@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Database, BrainCircuit, BarChart3, TestTube2, Layers } from 'lucide-react';
 
@@ -21,10 +20,10 @@ const MethodologyPage: React.FC = () => {
                 <strong className="text-gray-900">Environmental Satellite Data (2019-2024):</strong>
                 <ul className="list-['-_'] list-inside ml-6 mt-2 space-y-2 text-gray-600">
                     <li>
-                        <strong>Nitrogen Dioxide (NO₂):</strong> Sourced from the <strong className="text-gray-900">NASA Sentinel-5P dataset</strong>. This provides daily measurements of air pollution, which is a key indicator of traffic and industrial activity.
+                        <strong>Nitrogen Dioxide (NO₂):</strong> Sourced from the <strong className="text-gray-900">NASA Sentinel-5P dataset</strong>. Raw satellite measurements were processed to generate monthly mean NO₂ concentrations, which serve as a key indicator of traffic and industrial air pollution.
                     </li>
                     <li>
-                        <strong>Nighttime Lights (NTL):</strong> Sourced from the <strong className="text-gray-900">NASA VIIRS dataset</strong>. This data acts as a proxy for urban density and economic activity, showing patterns of human settlement and infrastructure.
+                        <strong>Nighttime Lights (NTL):</strong> Sourced from the <strong className="text-gray-900">NASA VIIRS dataset</strong>. This data was processed to calculate monthly mean light intensity, acting as a proxy for urban density and economic activity.
                     </li>
                 </ul>
               </li>
@@ -56,13 +55,13 @@ const MethodologyPage: React.FC = () => {
             <h2 className="text-2xl font-semibold mb-4 flex items-center"><BrainCircuit size={24} className="mr-3 text-emerald-500"/>AI & Geoprocessing</h2>
             <ul className="list-disc list-inside space-y-3 text-gray-700">
               <li>
-                <strong className="text-gray-900">Natural Language to GeoJSON:</strong> The application leverages Google's Gemini API to interpret user queries. A detailed system instruction primes the model to act as an expert urban planner for Dhaka.
+                <strong className="text-gray-900">Context-Aware Advisory:</strong> The application leverages Google's Gemini API to interpret user queries. A detailed system instruction primes the model to act as 'AeroScope AI Planner', an expert urban planning assistant for Dhaka. Before processing a query, the AI receives context about the current map state (e.g., visible layers, selected airbase).
               </li>
               <li>
-                <strong className="text-gray-900">Structured Output:</strong> The AI is constrained to produce structured JSON output conforming to a specific schema. This ensures that when a user requests geographic data, the response is a valid GeoJSON FeatureCollection that can be directly rendered on the map.
+                <strong className="text-gray-900">Structured Informational Responses:</strong> The AI's role is purely advisory. It is constrained to provide textual analysis and suggestions based on the provided data context. It does <strong className="text-gray-900">not</strong> generate new map layers or geographic data (GeoJSON).
               </li>
               <li>
-                <strong className="text-gray-900">Plausible Data Generation:</strong> For queries where precise data is unavailable, the AI is instructed to generate realistic and contextually plausible geographic data, enabling exploratory analysis.
+                <strong className="text-gray-900">Analytical Capabilities:</strong> The AI is designed to perform tasks like summarizing the urban characteristics of a selected area, suggesting plausible locations for new infrastructure in descriptive text, and answering data-related questions based on the visible layers on the map. All outputs are conversational text messages delivered through the AI chat interface.
               </li>
             </ul>
           </div>
@@ -76,7 +75,7 @@ const MethodologyPage: React.FC = () => {
                 <strong className="text-gray-900">Zone of Influence Definition:</strong> In line with international aviation planning policies, circular buffers with a <strong className="text-gray-900">7 km radius</strong> were created around each airbase. This defines the primary "airport influence area," where the impacts of noise, emissions, and operational activities are most significant.
               </li>
               <li>
-                <strong className="text-gray-900">Temporal Aggregation:</strong> To identify long-term trends and seasonal patterns, daily NO₂ values were aggregated to compute monthly and annual mean concentrations. Similarly, NTL indicators were summarized per buffer zone per year, allowing for consistent year-over-year comparisons.
+                <strong className="text-gray-900">Temporal Aggregation:</strong> To identify long-term trends and seasonal patterns, raw satellite measurements for NO₂ and NTL were aggregated to compute monthly mean values for each airbase's zone of influence. This allows for consistent month-over-month and year-over-year comparisons of environmental and economic activity trends.
               </li>
               <li>
                  <strong className="text-gray-900">Trend Visualization:</strong> Interactive line charts are used to visualize time-series data, such as environmental metrics and temperature. Users can compare trends across different locations or focus on a single area over time, which helps in identifying long-term patterns, seasonality, and anomalies.
