@@ -13,7 +13,7 @@ interface SidebarProps {
   layers: MapLayer[];
   chatHistory: AiResponseMessage[];
   isLoading: boolean;
-  onAiQuery: (prompt: string) => void;
+  onAiQuery: (prompt: string, isSuggestion?: boolean) => void;
   onToggleLayer: (layerId: string) => void;
   onRemoveLayer: (layerId:string) => void;
   onFlyTo: (location: AirbaseLocation) => void;
@@ -167,23 +167,21 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* AI Chat Button */}
-      {page === 'map' && (
-        <div className="p-4 border-t border-gray-200">
-          <button
-            onClick={() => setIsChatOpen(true)}
-            className="w-full bg-emerald-600 text-white p-3 rounded-lg shadow-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
-            title="Open AI Chat"
-          >
-            <MessageSquarePlus size={20} />
-            <span className="font-semibold">AI Chat Planner</span>
-          </button>
-        </div>
-      )}
+      <div className="p-4 border-t border-gray-200">
+        <button
+          onClick={() => setIsChatOpen(true)}
+          className="w-full bg-emerald-600 text-white p-3 rounded-lg shadow-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
+          title="Open AI Chat"
+        >
+          <MessageSquarePlus size={20} />
+          <span className="font-semibold">AI Chat Planner</span>
+        </button>
+      </div>
 
       {/* AI Chat Panel */}
       <div
-        className={`absolute top-0 left-0 w-full h-full bg-white transition-transform duration-300 ease-in-out ${
-          isChatOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`absolute top-0 left-0 w-full h-full bg-white ${
+          isChatOpen ? 'block' : 'hidden'
         }`}
       >
         <AiChat

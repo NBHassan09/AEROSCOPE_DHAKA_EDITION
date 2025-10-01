@@ -89,7 +89,7 @@ const App: React.FC = () => {
   const [selectedSector, setSelectedSector] = useState<Feature | null>(null);
   const [sectorInfo, setSectorInfo] = useState<SectorInfo | null>(null);
   const [flyTo, setFlyTo] = useState<{ coordinates: [number, number], zoom: number } | null>(null);
-  const [page, setPage] = useState<'map' | 'analysis' | 'methodology' | 'about'>('map');
+  const [page, setPage] = useState<'map' | 'analysis' | 'methodology' | 'about'>('about');
   const [selectedAirbase, setSelectedAirbase] = useState<AirbaseLocation | null>(null);
   
   const [satelliteLayer, setSatelliteLayer] = useState<OverlayTileLayer>({
@@ -239,7 +239,7 @@ const App: React.FC = () => {
     );
   }, [handleSelectSector]);
 
-  const handleAiQuery = useCallback(async (prompt: string) => {
+  const handleAiQuery = useCallback(async (prompt: string, isSuggestion: boolean = false) => {
     setIsLoading(true);
 
     const userMessage: AiResponseMessage = {
@@ -250,20 +250,24 @@ const App: React.FC = () => {
     setChatHistory(prev => [...prev, userMessage]);
 
     try {
-      // Capture context BEFORE clearing state
-      const visibleLayerNames = layers.filter(l => l.isVisible).map(l => l.name);
-      let context = '';
-      if (visibleLayerNames.length > 0) {
-        context += `Context: The following data layers are currently visible on the map: ${visibleLayerNames.join(', ')}.`;
-      } else {
-        context += 'Context: No data layers are currently visible on the map.';
-      }
+      let fullPrompt = `User query: "${prompt}"`;
 
-      if (selectedAirbase) {
-        context += ` The user is focused on the area around ${selectedAirbase.name}.`;
-      }
+      // Add context only if it's a suggestion click
+      if (isSuggestion) {
+        const visibleLayerNames = layers.filter(l => l.isVisible).map(l => l.name);
+        let context = '';
+        if (visibleLayerNames.length > 0) {
+          context += `Context: The following data layers are currently visible on the map: ${visibleLayerNames.join(', ')}.`;
+        } else {
+          context += 'Context: No data layers are currently visible on the map.';
+        }
 
-      const fullPrompt = `${context}\n\nUser query: "${prompt}"`;
+        if (selectedAirbase) {
+          context += ` The user is focused on the area around ${selectedAirbase.name}.`;
+        }
+        
+        fullPrompt = `${context}\n\nUser query: "${prompt}"`;
+      }
       
       const result = await generateGeoData(fullPrompt);
       const botMessage: AiResponseMessage = {

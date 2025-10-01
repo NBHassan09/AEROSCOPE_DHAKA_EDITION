@@ -29,10 +29,9 @@ const AboutPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center justify-center pt-6 border-t border-gray-200/50">
-            <Map size={20} className="text-emerald-500 mr-3 flex-shrink-0" />
-            <p className="text-gray-600">
-              Ready to explore? Click on the <strong className="font-semibold text-emerald-500">Map</strong> tab to begin your analysis.
+          <div className="bg-emerald-100 border border-emerald-300 rounded-lg p-5">
+            <p className="text-xl font-bold text-emerald-800 text-center">
+              Ready to explore? Click on the <strong>Map</strong> tab to begin your analysis.
             </p>
           </div>
         </div>

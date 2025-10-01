@@ -5,7 +5,7 @@ import { Send, Bot, User, Loader, X, Wand2 } from 'lucide-react';
 interface AiChatProps {
   history: AiResponseMessage[];
   isLoading: boolean;
-  onQuery: (prompt: string) => void;
+  onQuery: (prompt: string, isSuggestion?: boolean) => void;
   onClose: () => void;
 }
 
@@ -24,14 +24,14 @@ const AiChat: React.FC<AiChatProps> = ({ history, isLoading, onQuery, onClose })
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (prompt.trim() && !isLoading) {
-      onQuery(prompt);
+      onQuery(prompt, false);
       setPrompt('');
     }
   };
 
   const handleSuggestionClick = (suggestion: string) => {
     if (!isLoading) {
-      onQuery(suggestion);
+      onQuery(suggestion, true);
       setPrompt('');
     }
   };
