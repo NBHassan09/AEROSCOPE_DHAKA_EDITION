@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { environmentalData } from '../data/environmentalData';
 import { maxTemperatureData } from '../data/temperatureData';
-import { BarChart2, Lightbulb, School, HeartPulse, Combine, MousePointer, Check, Wind, TrendingUp, AlertTriangle, Thermometer } from 'lucide-react';
+import { BarChart2, Lightbulb, School, HeartPulse, Combine, MousePointer, Check, Wind, TrendingUp, AlertTriangle, Thermometer, ArrowDownCircle } from 'lucide-react';
 import type { TimeSeriesDataPoint } from '../types';
 
 const schoolAnalysisData = [
@@ -81,6 +81,8 @@ const AnalysisPage: React.FC = () => {
   const [selectedAirbases, setSelectedAirbases] = useState<string[]>(airbaseNames);
   const [visibleSeries, setVisibleSeries] = useState({ no2: true, ntl: true });
   const [isAnimated, setIsAnimated] = useState(false);
+  const [promptVisible, setPromptVisible] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const availableLocations = useMemo(() => {
     const locations = maxTemperatureData.map(d => d.location).sort((a,b) => a.replace(/_/g, ' ').localeCompare(b.replace(/_/g, ' ')));
@@ -90,7 +92,29 @@ const AnalysisPage: React.FC = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => setIsAnimated(true), 100);
-    return () => clearTimeout(timer);
+
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    // Check if scrolling is needed on mount. If not, hide prompt.
+    if (container.scrollHeight <= container.clientHeight) {
+      setPromptVisible(false);
+      return;
+    }
+
+    const handleScroll = () => {
+      if (container.scrollTop > 30) {
+        setPromptVisible(false);
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      clearTimeout(timer);
+      container.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const handleAirbaseSelection = (airbaseName: string) => {
@@ -173,7 +197,7 @@ const AnalysisPage: React.FC = () => {
   const maxHospitalValue = filteredHospitalData.length > 0 ? Math.max(...filteredHospitalData.map(d => d.value)) : 1;
 
   return (
-    <div className="p-8 h-full overflow-y-auto bg-gray-50 text-gray-800">
+    <div ref={scrollContainerRef} className="p-8 h-full overflow-y-auto bg-gray-50 text-gray-800">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center space-x-3 mb-6">
           <BarChart2 size={32} className="text-emerald-500"/>
@@ -346,6 +370,14 @@ const AnalysisPage: React.FC = () => {
                 <div className="bg-white p-5 rounded-lg border border-gray-200"><div className="flex items-center mb-3"><Combine size={22} className="mr-3 text-green-500" /><h4 className="font-bold text-lg">Strategic Overview</h4></div><p className="text-gray-600 text-sm">Analysis suggests <strong className="text-gray-900">Mirpur Cantonment</strong> serves as a primary residential and family support base. The lower density of civilian infrastructure near <strong className="text-gray-900">Tejgaon Air Base</strong> and <strong className="text-gray-900">HSIA</strong> is logical, prioritizing operational security and clear zones around key aviation assets, which indicates deliberate urban planning.</p></div>
             </div>
         </div>
+      </div>
+      <div className={`sticky bottom-6 w-full flex justify-center items-center transition-opacity duration-500 pointer-events-none ${!promptVisible ? 'opacity-0' : 'opacity-100'}`}>
+          <div className="flex flex-col items-center">
+              <span className="text-sm font-semibold text-gray-500 bg-white/50 backdrop-blur-sm px-3 py-1 rounded-full shadow-md mb-2">Scroll for more insights</span>
+              <div className="animate-bounce bg-white/70 backdrop-blur-sm p-2 rounded-full shadow-lg">
+                  <ArrowDownCircle size={32} className="text-gray-600" />
+              </div>
+          </div>
       </div>
     </div>
   );
