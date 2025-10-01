@@ -181,6 +181,7 @@ const MapFlyToController: React.FC<MapFlyToControllerProps> = ({ flyTo }) => {
 
 interface MapViewProps {
     layers: MapLayer[];
+    satelliteLayer: OverlayTileLayer;
     streetLayer: OverlayTileLayer;
     dynamicWorldLayer: OverlayTileLayer;
     waterNaturalLayer: OverlayTileLayer;
@@ -192,7 +193,7 @@ interface MapViewProps {
     flyTo: { coordinates: [number, number], zoom: number } | null;
 }
 
-const MapView: React.FC<MapViewProps> = ({ layers, streetLayer, dynamicWorldLayer, waterNaturalLayer, airbases, selectedSector, selectedAirbase, onSelectSector, onSelectAirbase, flyTo }) => {
+const MapView: React.FC<MapViewProps> = ({ layers, satelliteLayer, streetLayer, dynamicWorldLayer, waterNaturalLayer, airbases, selectedSector, selectedAirbase, onSelectSector, onSelectAirbase, flyTo }) => {
   const visibleLayers = layers.filter(l => l.isVisible);
 
   const selectedSectorCoords = selectedSector?.geometry?.type === 'Point' 
@@ -203,6 +204,15 @@ const MapView: React.FC<MapViewProps> = ({ layers, streetLayer, dynamicWorldLaye
     <MapContainer center={[23.8103, 90.4125]} zoom={12} style={{ height: '100%', width: '100%' }} scrollWheelZoom={true}>
       <TileLayer url={tileLayerUrl} attribution={tileLayerAttribution} />
       <MapFlyToController flyTo={flyTo} />
+
+      {satelliteLayer.isVisible && satelliteLayer.tileUrl && (
+        <TileLayer
+          url={satelliteLayer.tileUrl}
+          opacity={satelliteLayer.opacity}
+          attribution='&copy; Esri, USGS, NGA, NASA'
+          zIndex={5}
+        />
+      )}
 
       {streetLayer.isVisible && streetLayer.tileUrl && (
         <TileLayer

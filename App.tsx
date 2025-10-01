@@ -91,6 +91,14 @@ const App: React.FC = () => {
   const [page, setPage] = useState<'map' | 'analysis' | 'methodology' | 'about'>('about');
   const [selectedAirbase, setSelectedAirbase] = useState<AirbaseLocation | null>(null);
   
+  const [satelliteLayer, setSatelliteLayer] = useState<OverlayTileLayer>({
+    id: 'satellite-layer',
+    name: 'Satellite Imagery',
+    isVisible: false,
+    opacity: 1.0,
+    tileUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  });
+
   const [streetLayer, setStreetLayer] = useState<OverlayTileLayer>({
     id: 'street-highlight-layer',
     name: 'Street Highlights',
@@ -291,6 +299,14 @@ const App: React.FC = () => {
     setLayers(layers => layers.filter(layer => layer.id !== layerId));
   }, []);
 
+  const toggleSatelliteLayerVisibility = useCallback(() => {
+    setSatelliteLayer(prev => ({ ...prev, isVisible: !prev.isVisible }));
+  }, []);
+
+  const setSatelliteLayerOpacity = useCallback((opacity: number) => {
+    setSatelliteLayer(prev => ({ ...prev, opacity }));
+  }, []);
+
   const toggleStreetLayerVisibility = useCallback(() => {
     setStreetLayer(prev => ({ ...prev, isVisible: !prev.isVisible }));
   }, []);
@@ -322,6 +338,7 @@ const App: React.FC = () => {
           <>
             <MapView 
                 layers={layers}
+                satelliteLayer={satelliteLayer}
                 streetLayer={streetLayer}
                 dynamicWorldLayer={dynamicWorldLayer}
                 waterNaturalLayer={waterNaturalLayer}
@@ -367,6 +384,9 @@ const App: React.FC = () => {
         onFlyTo={handleFlyTo}
         selectedAirbase={selectedAirbase}
         onClearAirbaseSelection={handleClearAirbaseSelection}
+        satelliteLayer={satelliteLayer}
+        onToggleSatelliteLayer={toggleSatelliteLayerVisibility}
+        onSetSatelliteLayerOpacity={setSatelliteLayerOpacity}
         streetLayer={streetLayer}
         onToggleStreetLayer={toggleStreetLayerVisibility}
         onSetStreetLayerOpacity={setStreetLayerOpacity}

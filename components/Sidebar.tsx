@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useState } from 'react';
 import type { MapLayer, AiResponseMessage, AirbaseLocation, OverlayTileLayer } from '../types';
 import AiChat from './AiChat';
@@ -23,6 +19,9 @@ interface SidebarProps {
   onFlyTo: (location: AirbaseLocation) => void;
   selectedAirbase: AirbaseLocation | null;
   onClearAirbaseSelection: () => void;
+  satelliteLayer: OverlayTileLayer;
+  onToggleSatelliteLayer: () => void;
+  onSetSatelliteLayerOpacity: (opacity: number) => void;
   streetLayer: OverlayTileLayer;
   onToggleStreetLayer: () => void;
   onSetStreetLayerOpacity: (opacity: number) => void;
@@ -47,6 +46,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   onFlyTo,
   selectedAirbase,
   onClearAirbaseSelection,
+  satelliteLayer,
+  onToggleSatelliteLayer,
+  onSetSatelliteLayerOpacity,
   streetLayer,
   onToggleStreetLayer,
   onSetStreetLayerOpacity,
@@ -153,6 +155,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </button>
                 {isOverlaysExpanded && (
                     <div className="pl-1 space-y-2 pt-2 animate-fade-in">
+                        <OverlayLayerControl
+                            layer={satelliteLayer}
+                            onToggle={onToggleSatelliteLayer}
+                            onSetOpacity={onSetSatelliteLayerOpacity}
+                        />
                         <OverlayLayerControl
                             layer={streetLayer}
                             onToggle={onToggleStreetLayer}

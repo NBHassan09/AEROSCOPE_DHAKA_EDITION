@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { ChevronUp, ChevronDown, Plane, School, Hospital, Flame, MapPin, Droplet, Trees } from 'lucide-react';
 
@@ -89,6 +87,14 @@ const MapLegend: React.FC = () => {
             {/* --- Divider --- */}
             <div className="border-t border-gray-300 pt-3 mt-3">
                 <span className="font-semibold text-xs text-gray-600">Overlay Layers</span>
+            </div>
+
+            {/* Satellite Imagery */}
+            <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-sm bg-gray-700 border-2 border-gray-400" />
+                </div>
+                <span className="text-sm text-gray-700">Satellite Imagery</span>
             </div>
             
             {/* Street Highlights */}

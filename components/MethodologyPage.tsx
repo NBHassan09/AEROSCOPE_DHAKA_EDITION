@@ -50,6 +50,19 @@ const MethodologyPage: React.FC = () => {
             </ul>
           </div>
 
+          {/* Data Collection Section */}
+          <div className="bg-white p-6 rounded-lg border border-gray-200">
+            <h2 className="text-2xl font-semibold mb-4 flex items-center"><Database size={24} className="mr-3 text-emerald-500"/>Data Collection for Hospitals, Schools, and Fire Stations</h2>
+            <div className="space-y-4 text-gray-700">
+              <p>
+                The spatial datasets for hospitals, schools, and fire stations in Dhaka were extracted directly from OpenStreetMap (OSM) using the Overpass API, an advanced query interface that enables the retrieval of specific geospatial features based on defined tags and geographic boundaries. Custom Overpass queries were constructed to filter features with the tags <code className="bg-gray-200 text-gray-800 rounded px-1 py-0.5 text-sm font-mono">amenity="hospital"</code>, <code className="bg-gray-200 text-gray-800 rounded px-1 py-0.5 text-sm font-mono">amenity="school"</code>, and <code className="bg-gray-200 text-gray-800 rounded px-1 py-0.5 text-sm font-mono">amenity="fire_station"</code> within the defined buffer zones (e.g., 7 km and 20 km radii) surrounding each major airbase.
+              </p>
+              <p>
+                The returned results included detailed geospatial coordinates and metadata (such as facility name and classification), which were then exported in GeoJSON and CSV formats for integration into the web-based planning platform. This approach ensured that the collected data reflected the most up-to-date and community-verified geospatial information available through the OSM ecosystem.
+              </p>
+            </div>
+          </div>
+          
           {/* AI & Geoprocessing Section */}
           <div className="bg-white p-6 rounded-lg border border-gray-200">
             <h2 className="text-2xl font-semibold mb-4 flex items-center"><BrainCircuit size={24} className="mr-3 text-emerald-500"/>AI & Geoprocessing</h2>
