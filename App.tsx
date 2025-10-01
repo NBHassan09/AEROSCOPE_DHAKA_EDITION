@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { v4 as uuidvv4 } from 'uuid';
 import Sidebar from './components/Sidebar';
@@ -88,7 +89,7 @@ const App: React.FC = () => {
   const [selectedSector, setSelectedSector] = useState<Feature | null>(null);
   const [sectorInfo, setSectorInfo] = useState<SectorInfo | null>(null);
   const [flyTo, setFlyTo] = useState<{ coordinates: [number, number], zoom: number } | null>(null);
-  const [page, setPage] = useState<'map' | 'analysis' | 'methodology' | 'about'>('about');
+  const [page, setPage] = useState<'map' | 'analysis' | 'methodology' | 'about'>('map');
   const [selectedAirbase, setSelectedAirbase] = useState<AirbaseLocation | null>(null);
   
   const [satelliteLayer, setSatelliteLayer] = useState<OverlayTileLayer>({

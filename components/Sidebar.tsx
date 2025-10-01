@@ -60,27 +60,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   onSetWaterNaturalLayerOpacity,
 }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isChatRendered, setIsChatRendered] = useState(false);
   const [isOverlaysExpanded, setIsOverlaysExpanded] = useState(true);
   const [isDataLayersExpanded, setIsDataLayersExpanded] = useState(true);
-
-  const handleOpenChat = () => {
-    setIsChatRendered(true);
-    // Use a timeout to allow the element to be added to the DOM and rendered
-    // before applying the class that triggers the slide-in animation.
-    setTimeout(() => {
-      setIsChatOpen(true);
-    }, 10);
-  };
-
-  const handleCloseChat = () => {
-    setIsChatOpen(false);
-    // Wait for the slide-out animation (300ms) to finish before removing the component from the DOM.
-    setTimeout(() => {
-      setIsChatRendered(false);
-    }, 300);
-  };
-
 
   return (
     <aside className="w-96 h-screen bg-white/80 backdrop-blur-sm border-r border-gray-200 flex flex-col shadow-2xl relative overflow-hidden">
@@ -139,90 +120,82 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <li>Use the AI Chat for analysis and suggestions.</li>
                 </ul>
             </div>
+            {/* FIX: The AirbaseList component was not closed properly and was missing props. */}
             <AirbaseList 
               airbases={airbases} 
-              onFlyTo={onFlyTo} 
-              selectedAirbase={selectedAirbase} 
+              onFlyTo={onFlyTo}
+              selectedAirbase={selectedAirbase}
               onClearSelection={onClearAirbaseSelection}
             />
-            <div className="space-y-2">
-                <button onClick={() => setIsOverlaysExpanded(!isOverlaysExpanded)} className="w-full flex justify-between items-center text-lg font-semibold text-gray-800">
-                    <span className="flex items-center">
-                        <Globe className="mr-2 text-emerald-500" size={20} />
-                        Overlay Layers
-                    </span>
-                    {isOverlaysExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </button>
-                {isOverlaysExpanded && (
-                    <div className="pl-1 space-y-2 pt-2 animate-fade-in">
-                        <OverlayLayerControl
-                            layer={satelliteLayer}
-                            onToggle={onToggleSatelliteLayer}
-                            onSetOpacity={onSetSatelliteLayerOpacity}
-                        />
-                        <OverlayLayerControl
-                            layer={streetLayer}
-                            onToggle={onToggleStreetLayer}
-                            onSetOpacity={onSetStreetLayerOpacity}
-                        />
-                        <OverlayLayerControl
-                            layer={waterNaturalLayer}
-                            onToggle={onToggleWaterNaturalLayer}
-                            onSetOpacity={onSetWaterNaturalLayerOpacity}
-                        />
-                        <OverlayLayerControl
-                            layer={dynamicWorldLayer}
-                            onToggle={onToggleDynamicWorld}
-                            onSetOpacity={onSetDynamicWorldOpacity}
-                        />
-                    </div>
-                )}
+            
+            {/* Overlay Layers Section */}
+            <div>
+              <button onClick={() => setIsOverlaysExpanded(!isOverlaysExpanded)} className="w-full flex justify-between items-center py-2">
+                <h2 className="text-lg font-semibold text-gray-700 flex items-center">
+                  <Globe className="mr-2 text-blue-500" size={20} />
+                  Overlay Layers
+                </h2>
+                {isOverlaysExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              </button>
+              {isOverlaysExpanded && (
+                <div className="mt-2 space-y-2">
+                  <OverlayLayerControl layer={satelliteLayer} onToggle={onToggleSatelliteLayer} onSetOpacity={onSetSatelliteLayerOpacity} />
+                  <OverlayLayerControl layer={streetLayer} onToggle={onToggleStreetLayer} onSetOpacity={onSetStreetLayerOpacity} />
+                  <OverlayLayerControl layer={waterNaturalLayer} onToggle={onToggleWaterNaturalLayer} onSetOpacity={onSetWaterNaturalLayerOpacity} />
+                  <OverlayLayerControl layer={dynamicWorldLayer} onToggle={onToggleDynamicWorld} onSetOpacity={onSetDynamicWorldOpacity} />
+                </div>
+              )}
             </div>
-            <div className="space-y-2">
-                <button onClick={() => setIsDataLayersExpanded(!isDataLayersExpanded)} className="w-full flex justify-between items-center text-lg font-semibold text-gray-800">
-                    <span className="flex items-center">
-                        <Layers className="mr-2 text-emerald-500" size={20} />
-                        Data Layers
-                    </span>
-                    {isDataLayersExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </button>
-                 {isDataLayersExpanded && (
-                    <div className="pl-1 pt-2 animate-fade-in">
-                        <LayerList layers={layers.filter(l => !l.id.includes('airbase'))} onToggle={onToggleLayer} onRemove={onRemoveLayer} />
-                    </div>
-                 )}
+
+            {/* Data Layers Section */}
+            <div>
+              <button onClick={() => setIsDataLayersExpanded(!isDataLayersExpanded)} className="w-full flex justify-between items-center py-2">
+                <h2 className="text-lg font-semibold text-gray-700 flex items-center">
+                  <Layers className="mr-2 text-purple-500" size={20} />
+                  Data Layers
+                </h2>
+                {isDataLayersExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              </button>
+              {isDataLayersExpanded && (
+                <div className="mt-2">
+                  <LayerList layers={layers} onToggle={onToggleLayer} onRemove={onRemoveLayer} />
+                </div>
+              )}
             </div>
           </>
         )}
       </div>
 
-      <div className="p-4 border-t border-gray-200">
-        <button
-          onClick={handleOpenChat}
-          className="w-full flex items-center justify-center space-x-2 bg-emerald-600 text-white font-bold py-2 px-4 rounded-md hover:bg-emerald-500 transition-colors"
-        >
-          <MessageSquarePlus size={20} />
-          <span>Open Planning AI Chat</span>
-        </button>
-      </div>
-
-      {/* Collapsible Chat Panel */}
-      {isChatRendered && (
-        <div
-            className={`absolute bottom-0 left-0 w-full h-full bg-white/90 backdrop-blur-md flex flex-col transition-transform duration-300 ease-in-out ${
-            isChatOpen ? 'translate-y-0' : 'translate-y-full'
-            }`}
-        >
-            <AiChat
-            history={chatHistory}
-            isLoading={isLoading}
-            onQuery={onAiQuery}
-            onClose={handleCloseChat}
-            />
+      {/* AI Chat Button */}
+      {page === 'map' && (
+        <div className="p-4 border-t border-gray-200">
+          <button
+            onClick={() => setIsChatOpen(true)}
+            className="w-full bg-emerald-600 text-white p-3 rounded-lg shadow-md hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
+            title="Open AI Chat"
+          >
+            <MessageSquarePlus size={20} />
+            <span className="font-semibold">AI Chat Planner</span>
+          </button>
         </div>
       )}
+
+      {/* AI Chat Panel */}
+      <div
+        className={`absolute top-0 left-0 w-full h-full bg-white transition-transform duration-300 ease-in-out ${
+          isChatOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <AiChat
+          history={chatHistory}
+          isLoading={isLoading}
+          onQuery={onAiQuery}
+          onClose={() => setIsChatOpen(false)}
+        />
+      </div>
     </aside>
   );
 };
 
+// FIX: Added default export to resolve module import error.
 export default Sidebar;

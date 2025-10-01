@@ -68,7 +68,7 @@ const AiChat: React.FC<AiChatProps> = ({ history, isLoading, onQuery, onClose })
                   : 'bg-gray-100 text-gray-800 rounded-bl-none'
               }`}
             >
-              <p className="text-sm">{msg.content}</p>
+              <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
             </div>
              {msg.sender === 'user' && (
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
