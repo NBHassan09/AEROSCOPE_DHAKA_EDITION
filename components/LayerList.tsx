@@ -33,13 +33,6 @@ const LayerList: React.FC<LayerListProps> = ({ layers, onToggle, onRemove }) => 
                 >
                   {layer.isVisible ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
-                <button
-                  onClick={() => onRemove(layer.id)}
-                  className="p-1 text-gray-500 hover:text-red-500 transition-colors"
-                  title="Remove Layer"
-                >
-                  <Trash2 size={18} />
-                </button>
               </div>
             </li>
           ))}
