@@ -1,11 +1,8 @@
-# Run and deploy the app
+#Link to see the app: https://aeroscope-dhaka-edition.vercel.app/ 
 
-This contains everything you need to run your app locally.
-
-## Run Locally
+# To run Run Locally
 
 **Prerequisites:**  Node.js
-
 
 1. Install dependencies:
    `npm install`
